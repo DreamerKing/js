@@ -1,0 +1,1 @@
+console.log("test load script");
