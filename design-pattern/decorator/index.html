@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Decorator Pattern</title>
+</head>
+<body>
+    <script src="./decorator-pattern.js"></script>
+    <script>
+        var form = document.createElement("form"),
+        formFiled = new FormFiled("search", "Enter your search term");
+
+        formFiled = new MaxLengthFiledDecorator(formFiled, 20);
+        formFiled = new AutoCompleteFiledDecorator(formFiled, "on");
+        form.appendChild(formFiled.createElement());
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            if(formFiled.isValid()) {
+                form.submit();
+            } else {
+                console.log("Please correct this issues in the form filed.");
+            }
+        }, false);
+
+        window.addEventListener("load", function(){
+            document.body.appendChild(form);
+        }, false);
+    </script>
+</body>
+</html>
