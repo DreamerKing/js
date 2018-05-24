@@ -9,3 +9,9 @@ pfs.readFile("./race.js", "utf-8")
   .then(content => {
     console.log(content);
   })
+
+// 浏览器端
+// IE 中使用Promise
+// 1. jquery.defered  只想实现异步队列
+// 2. Bulebird Promisepolyfill 兼容所有平台
+// Fetch API
