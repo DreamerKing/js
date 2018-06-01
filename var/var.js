@@ -1,3 +1,4 @@
+/*
 var  a = 12;
 function b() {
     return 23;
@@ -17,3 +18,18 @@ function b() {
     return 90;
 }
 console.log(b());
+*/
+
+function show() {
+	a = "Hello";
+	console.log(a);
+}
+
+show();
+
+
+// var a;
+
+// 声明变量
+// 变量初始化  变量初始化语句可以写在变量声明之前，这是因为变量声明通常是在代码执行之前完成,也就是所谓的变量提升。
+// 更新变量
