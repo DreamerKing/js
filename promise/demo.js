@@ -1,22 +1,23 @@
 console.log("here we go");
 
-/*doSomething().then(function (value) {
+/* doSomething().then(function (value) {
 	console.log(value);
 	return doSomethingElse();
 }).then(value => {
 	console.log(value);
-});*/
+});
+ */
 
-/*doSomething().then(function (){
+/* doSomething().then(function (){
 	doSomethingElse();
-})*/
+}) */
 
-/*doSomething()
+/* doSomething()
 .then(doSomethingElse())
 .then( value => {
 	console.log(value);
 });
-*/
+ */
 
 doSomething().then(doSomethingElse).then(value => console.log(value));
 
@@ -31,9 +32,10 @@ function doSomething() {
 	})
 }
 
-function doSomethingElse(){
+function doSomethingElse(value){
+	console.log('hihi', value);
 	setTimeout(() => {
 		console.log("esle");
 	}, 1000);
 	return "else return";
-}
+} 

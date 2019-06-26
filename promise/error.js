@@ -11,7 +11,7 @@ new Promise( (resolve, reject) => {
 })
 .then( value => {
   console.log(value);
-})
-.catch( error => {
-  console.log("Error:", error.message);
-});
+}, error => console.log("Error:", error.message))
+// .catch( error => {
+//   console.log("Error:", error.message);
+// });
