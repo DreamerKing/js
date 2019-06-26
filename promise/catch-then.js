@@ -1,4 +1,3 @@
-console.log("here we go");
 
 new Promise(resolve => {
   setTimeout(() => {
