@@ -2,11 +2,11 @@ console.log("here we go");
 
 /* doSomething().then(function (value) {
 	console.log(value);
-	return doSomethingElse();
+	return doSomethingElse(value);
 }).then(value => {
 	console.log(value);
-});
- */
+}); */
+
 
 /* doSomething().then(function (){
 	doSomethingElse();
@@ -16,8 +16,8 @@ console.log("here we go");
 .then(doSomethingElse())
 .then( value => {
 	console.log(value);
-});
- */
+}); */
+
 
 doSomething().then(doSomethingElse).then(value => console.log(value));
 

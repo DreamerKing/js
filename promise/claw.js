@@ -37,7 +37,6 @@ function saveImage(name, url){
 	.on('error', (err) => {
 		console.log("保存图片出错");
 	})
-
 }
 
 // 获取每个链接

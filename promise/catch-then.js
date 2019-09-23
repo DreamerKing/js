@@ -9,7 +9,7 @@ new Promise(resolve => {
 })
 .catch( error => {
   console.log("I catch:", error);
-  return "Haha";
+  // return "Haha";
   throw new Error("another error");
 })
 .then(() => {

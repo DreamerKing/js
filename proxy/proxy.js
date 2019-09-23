@@ -1,5 +1,6 @@
 var user = new Proxy({}, {
     get: function(target, prop){
+        console.log(target, prop, "get");
         if(prop == 'fullName'){
             return `${target.fname} ${target.lname}`; 
         }
@@ -15,6 +16,6 @@ var user = new Proxy({}, {
 
 user.fname = "Wang";
 user.lname = "xiangzhao";
-console.log(user.fullName);
+console.log(user.fullName, ">>>");
 user.fullName = "hahah kkii"
 console.log(user);

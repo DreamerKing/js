@@ -237,7 +237,7 @@ console.log(foo());
 
  */
 
- function foo(){
+/*  function foo(){
 	setTimeout(() => {
 		console.log("id: ", this.id);
 		console.log(this, arguments);
@@ -245,13 +245,13 @@ console.log(foo());
  }
 
  var id = 21;
- foo.call({ id: 42 });
+ foo.call({ id: 42 }); */
 
 
 /*  
 1. 函数参数默认值 函数默认参数是惰性求值的 默认参数与解构赋值结合使用
 函数属性：
-1. lenth 函数必传参数个数，不包括可选参数(默认参数、尾参数)
+1. length 函数必传参数个数，不包括可选参数(默认参数、尾参数)
 2. name 函数名
 
 箭头函数注意点：
@@ -265,3 +265,55 @@ console.log(foo());
 2. 需要使用动态this;
 3. 函数体复杂
 */
+/* 
+function bar(val){
+	return y + val;
+}
+
+function foo(x = y + 3, z = bar(x)){
+	console.log(x, z);	
+}
+
+
+var y = 2;
+foo(undefined, 10);
+foo(10); */
+/* 
+var w = 1, z = 2;
+function foo(x = w + 1, y = x + 1, z = z + 1){
+	console.log(x, y, z);	
+}
+
+foo(); */
+
+let Person = function () {};
+Person.prototype.set = function(age){
+	this.age = age;
+	return this;
+};
+Person.prototype.get = function(){
+	return this.age;
+}
+
+let p = new Person()
+let a = p.set(12).get();
+console.log(a);
+
+function wordsChain(word) {
+	let words = word;
+	function chain(word) {
+		words += '->' + word;
+		return chain;
+	}
+	chain.valueOf = function(){
+		return words;
+	}
+	return chain;
+}
+
+let ws = wordsChain('胸有成竹')('竹报平安')('安富尊荣').valueOf();
+console.log(ws);
+
+
+
+

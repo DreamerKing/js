@@ -2,7 +2,7 @@
  //  接收数组作为参数，数组里可以是Promise对象，也可以是其他的值，只有Promise会等待状态的改变，但所有Promise都完成，该Promise 才完成，返回值是全部值组成的数组
  //  有任何一个子Promise失败，返回值是第一个失败的子Pormise的结果。
 
- console.log("here we go");
+/*  console.log("here we go");
 
  Promise.all([1,2,3])
  .then( all => {
@@ -64,4 +64,29 @@
      console.log("Catch:", err);
 
    });
- console.timeEnd("tl");
+ console.timeEnd("tl"); */
+
+ let p1 = new Promise((resolve, reject) => {
+   setTimeout(() => {
+     console.log("p1");
+     resolve(1);
+     console.log("1p");
+   }, 0);
+ });
+let p2 = new Promise((resolve, reject) => {
+  console.log("p2");
+  reject(2);
+  console.log("2p");
+  
+});
+let p3 = new Promise((resolve, reject) => {
+  console.log("p3");
+  resolve(3);
+  console.log("3p");
+  
+});
+
+let p4 = Promise.race([p1, p2, p3]);
+p4.then((value) => {
+  console.log("all: ",value);
+}).catch((err) => console.error("err:",err));

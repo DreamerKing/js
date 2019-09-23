@@ -1,7 +1,7 @@
 /* console.log(a);
 var a = 1; */
 
-var  a = 12;
+/* var  a = 12;
 function b() {
     return 23;
 }
@@ -13,13 +13,15 @@ function b() { // 同名函数后面声明的函数会覆盖前面的函数
 {
     var a = 23; // 后声明的变量会覆盖之前声明的变量
 }
-console.log(a, b());
+console.log(a, b()); */
 
-/* var b = 80;  // 变量会覆盖函数
+
+/* 
 function b() {
     return 90;
 }
-console.log(b()); */
+var b;  // 变量先被预处理
+console.log(b); */
 
 
 /* function show() {
@@ -42,3 +44,61 @@ if (false) {
     //let x = "hello";
 }
 console.log(x); */
+
+
+/* // 百度面试
+var a = { n: 1};
+var b = a;
+a.x = a = { n: 2 };
+console.log(a.n, b.n);
+console.log(a.x, b.x); // why? 优先级 */
+
+/* // 函数作业域
+var x = 10;
+function fn(){
+    console.log(x);
+}
+
+function show(fn){
+    var x = 20;
+    fn();
+}
+
+show(fn); */
+
+/* var fn = function () {
+    console.log(fn);
+}
+
+fn();
+
+var obj = {
+    fn2: function () {
+        console.log(fn2);
+    }
+}
+
+obj.fn2(); */
+
+
+/* var a = 2;
+function fn(){
+    console.log(a);
+    var a = 3;
+} 
+
+fn(); */
+
+/* var c = 1;
+function c(c){
+    console.log(c);
+    var c = 3;
+}
+
+c(2); */
+
+/* 
+预处理：
+1. 收集用var声明的变量
+2. 收集用function声明的函数
+*/

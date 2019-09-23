@@ -1,0 +1,5 @@
+Proxy(代理)是一种可以拦截改变底层的JS引擎操作的包装器。
+
+原理代理
+getPrototypeOf陷阱必须返回对象或null,只要返回值必将导致运行时错误，返回值检查可以确保Object.getPrototypeOf()返回的总是预期的值。
+setPrototypeOf陷阱，如果操作失败则返回false，此时Object.setPrototypeOf()会抛出错误如果setPrototypeOf陷阱返回任何不是false的值，那么Object.setPrototypeOf()便总是假设操作成功。
