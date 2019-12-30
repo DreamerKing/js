@@ -16,7 +16,7 @@ function a() {
 // var a = 20;
 console.log(a); 
 
-/* 
+
 for (let index = 0; index < 10; index++) {}
 //console.log(index);
 
@@ -32,7 +32,7 @@ for (let j = 0; j < 10; j++) {
 // 另外循环变量的那部分作用域与循环体的作用域是独立的，其循环的值是因为js引擎会记录上一次循环的值
 
 a["king"]();
- */
+
 
 console.log(typeof x);
 
@@ -73,7 +73,7 @@ try {
 f();
 f2();
 
-function b(params) {
+/* function b(params) {
     console.log("out");
 }
 
@@ -85,4 +85,4 @@ function b(params) {
     }
     b();
 }());
-
+ */

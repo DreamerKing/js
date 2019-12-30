@@ -1,4 +1,7 @@
 /* console.log(a);
+function a() {
+    
+}
 var a = 1; */
 
 /* var  a = 12;
@@ -16,8 +19,8 @@ function b() { // 同名函数后面声明的函数会覆盖前面的函数
 console.log(a, b()); */
 
 
-/* 
-function b() {
+
+/* function b() {
     return 90;
 }
 var b;  // 变量先被预处理
@@ -25,11 +28,12 @@ console.log(b); */
 
 
 /* function show() {
-	a = "Hello";
-	console.log(a);
+	var a = "Hello";
+	
 }
+show();
+console.log(a); */
 
-show(); */
 
 
 // var a;
@@ -37,11 +41,11 @@ show(); */
 // 声明变量
 // 变量初始化  变量初始化语句可以写在变量声明之前，这是因为变量声明通常是在代码执行之前完成,也就是所谓的变量提升。
 // 更新变量
-/* 
+
 // 之前的js只提供函数作用域和全局作用域来控制变量的作用域和生命周期。
-if (false) {
+/* if (true) {
     var x = "hello";
-    //let x = "hello";
+    // let x = "hello";
 }
 console.log(x); */
 
@@ -50,11 +54,14 @@ console.log(x); */
 var a = { n: 1};
 var b = a;
 a.x = a = { n: 2 };
+debugger;
 console.log(a.n, b.n);
-console.log(a.x, b.x); // why? 优先级 */
+console.log(a.x, b.x); // why? 优先级
+ */
 
-/* // 函数作业域
-var x = 10;
+
+// 函数作用域
+/* var x = 10;
 function fn(){
     console.log(x);
 }
@@ -74,7 +81,7 @@ fn();
 
 var obj = {
     fn2: function () {
-        console.log(fn2);
+        console.log(this.fn2);
     }
 }
 
@@ -89,13 +96,13 @@ function fn(){
 
 fn(); */
 
-/* var c = 1;
+var c = 1;
 function c(c){
     console.log(c);
     var c = 3;
 }
 
-c(2); */
+c(2);
 
 /* 
 预处理：
