@@ -1,0 +1,54 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 生成器\n调用生成器函数只是创建了迭代器，并没有执行。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "var x = 1;\nfunction foo() {\n  x++;\n  bar();\n  console.log(\"x:\", x);\n}\n\nfunction bar() {\n  x++;\n}\n\nfoo();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "x: 3",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "var x = 1;\nfunction* foo() {\n  x++;\n  yield;\n  console.log(\"x:\", x);\n}\n\nfunction bar() {\n  x++;\n}\n\nconst it = foo();\nconsole.log(\"o1:\", x);\n// bar();\nconsole.log(\"o2:\", x);\nit.next();\nconsole.log(\"o3:\", x);\nbar();\nconsole.log(\"o4:\", x);\nit.next();\nconsole.log(\"o5:\", x);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "o1: 1",
+                                "o2: 1",
+                                "o3: 2",
+                                "o4: 3",
+                                "x: 3",
+                                "o5: 3",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

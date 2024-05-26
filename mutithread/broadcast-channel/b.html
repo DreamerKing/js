@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>b</title>
+  <style>
+    #draggable {
+      width: 200px;
+      height: 200px;
+      background-color: blue;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="draggable"></div>
+  <script>
+    const draggable = document.getElementById("draggable");
+
+    const channel = new BroadcastChannel("web_channel");
+
+    let offsetX = 0;
+    let offsetY = 0;
+    let isDragging = false;
+
+    draggable.addEventListener("mousedown", (e) => {
+      offsetX = e.clientX - draggable.getBoundingClientRect().left;
+      offsetY = e.clientY - draggable.getBoundingClientRect().top;
+      isDragging = true;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        const x = e.clientX - offsetX;
+        const y = e.clientY - offsetY;
+        draggable.style.left = x + "px";
+        draggable.style.top = y + "px";
+
+        channel.postMessage({ left: x, top: y });
+      }
+    });
+    
+    draggable.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 兼容性 \n\n## Polyfill\n根据新特性的定义,实现在旧环境运行的等价功能。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "if (!Number.isNaN) {\n  Number.isNaN = function isNaN(x) {\n    return x !== x;\n  };\n}\n\nconsole.log(Number.isNaN(NaN));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "if (!Object.is) {\n  Object.is = function (v1, v2) {\n    if (v1 === 0 && v2 === 0) {\n      return 1 / v1 === 1 / v2;\n    }\n    if (v1! == v1) {\n      return v2 !== v2;\n    }\n    return v1 === v2;\n  };\n}\n\nconsole.log(Object.is(NaN, NaN));\nconsole.log(Object.is(0, -0));\nconsole.log(Object.is(Infinity, 1 / 0));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                "false",
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 转译  \n新语法转换为等价旧版本的语法。有些新语法无法转换为旧语法表示。\n新语法更容易阅读和维护。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 宿主对象  \n由运行环境提供的，而非JS规范定义。  \n- window\n- document"
+            ],
+            "outputs": []
+        }
+    ]
+}

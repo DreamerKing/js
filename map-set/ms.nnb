@@ -1,0 +1,497 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# Map/WeakMap|Set/WeakSet"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Map\n允许是任意类型的值作为键。\n键保持唯一性，使用全等性进行比较\n\nMap()构造函数 接受二维数组或其他可迭代对象。\n\n属性\n- size\n方法\n- set()\n- get()\n- has()\n- delete()\n- clear()\n- keys()\n- values()\n- entries() 回调参数键在前、值在后\n- forEach() 回调的参数值在前、键在后\n  \n遍历条目的顺序就是创建条目的顺序，更改条目的值不会改变条目的顺序。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let m = new Map();\nm.set(\"one\", 1);\nm.set(\"two\", 2);\nconsole.log(m.size);\nlet m1 = new Map(m);\nconsole.log(m1);\nconsole.log(m == m1);\nm1.delete(\"two\");\nconsole.log(m1.size, m.size);\nconsole.log(m.get(\"one\"));\nm.delete(\"one\");\nconsole.log(m1.size, m.size);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "2",
+                                "Map(2) { 'one' => 1, 'two' => 2 }",
+                                "false",
+                                "1 2",
+                                "1",
+                                "1 1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let m = new Map();\nm.set(2, 3).set(3, 2);\nconsole.log(m.size, m.get(2), m.has(3));"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "2 3 true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const m = new Map();\n\nconst x = {};\nm.set(x, \"x\");\nconst y = x;\nconst key = -0;\nm.set(key, -0);\nconsole.log(key);\nm.set(NaN, NaN);\nconsole.log(m.has(y), m.get(y), m.get(0), m.get(NaN));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "-0",
+                                "true x -0 NaN",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let m = new Map();\nm.set({}, 1);\nm.set({}, 2);\nm.set(m, 2);\nconsole.log(m.size);\nconsole.log(m.get({}));\nconsole.log(m.get(m));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "3",
+                                "undefined",
+                                "2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Set\n没有索引或顺序，不允许重复\n可迭代对象\n虽然没有索引，但集合会记住元素的插入顺序,而且始终按照这个顺序迭代集合。\n\nSet()构造函数 传参可以是数组或其他可迭代对象  \n\n属性\n  - size  \n\n方法\n  - add() 接受一个参数，返回调用它的集合\n  - has() 检查某个元素是否是集合的成员，专门做了优化比数组的includes()方法快\n  - delete() 一次删除一个元素，返回布尔值\n  - clear() \n  - forEach()"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let s = new Set();\nlet s2 = new Set([1, s]);\nlet s3 = new Set(s2);\nconsole.log(s2);\nconsole.log(s2 == s3);\nconsole.log(s3);\nlet strSet = new Set(\"hello\");\nconsole.log(strSet);\nconsole.log(strSet.size);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Set(2) { 1, Set(0) {} }",
+                                "false",
+                                "Set(2) { 1, Set(0) {} }",
+                                "Set(4) { 'h', 'e', 'l', 'o' }",
+                                "4",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let s = new Set();\nconsole.log(s.size);\ns.add(1);\nconsole.log(s.size);\ns.add(1);\nconsole.log(s.size);\ns.add(true);\nconsole.log(s.size);\ns.add([1, 2, 3])\nconsole.log(s.size);\ns.delete(1);\nconsole.log(s.size);\ns.clear();\nconsole.log(s.size);\n\n\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "0",
+                                "1",
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "0",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let s = new Set();\ns.add(2);\ns.add(1);\ns.add(10);\n\ns.forEach((key, value) => {\n  console.log(key, value);\n});\n\nfor (const val of s) {\n  console.log(val);\n}\n\nlet a = [...s];\nconsole.log(a);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "2 2",
+                                "1 1",
+                                "10 10",
+                                "2",
+                                "1",
+                                "10",
+                                "[ 2, 1, 10 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## WeakSet/WeakMap\n不会阻止键值被当作垃圾收集。\nWeakMap的键必须是对象或数组，原始值不受垃圾收集控制，不能作为键。\n不是可迭代对象，只实现get()、set()、has()和delete()方法。没有定义keys()、values()、entries()、forEach()方法\n没有size属性\n\n主要用途 实现值与对象的关联而不导致内存泄漏。\n\nWeakSet\n- 不允许使用原始值作为成员。\n- 只实现了add()、delete()和has()方法，而且不可迭代。\n- 没有size属性。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 定型数组\n定型数组与常规数组的区别:\n- 定型数组的元素全部是数值,并且类型相同。\n- 创建定型数组时必须指定长度，并且长度不能改变,length属性只读。\n- 定型数组的元素创建时始终都会被初始化为0。\n- 定型数组并不是真正的数组，但它们重新实现了多数数组的方法。\n- 定型数组并未实现改变数组长度的方法，如pop()、push()、splice()等，但实现了修改内容而不改变长度的方法,如sort()、reverse()和fill()等。\n- map()、slice()等返回新数组的方法，则返回与调用它们的定型数组相同类型的数组。\n\n11中定型数组\n- Int8Array()\n- Uint8Array()\n- Uint8ClampedArray() 有额外的类型和越界检查（上溢不归零）\n- Int16Array()\n- UInt16Array()\n- Int32Array()\n- UInt32Array()\n- BigInt64Array()\n- BigUint64Array()\n- Float32Array()\n- Float64Array() 常规数值类型\n\nBYTES_PER_ELEMENT属性不同类型数组元素的字节数\n\n创建定型数组\n- 构造函数\n- of()\n- form()\n- ArrayBuffer()\n\n在创建类型数组的过程中，可能会被截断，或重置，不会有警告，也不会有报错。\n\n每个定型数组都有3个属性与底层的缓冲区相关:\n- buffer\n- byteOffset 底层缓冲区字节起点偏移量\n- byteLength 数组占据的字节长度"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let bytes = new Int8Array(10);\nconsole.log(bytes);\nconsole.log(bytes.BYTES_PER_ELEMENT);\nlet matrix = new Float64Array(9);\nconsole.log(matrix);\nconsole.log(matrix.BYTES_PER_ELEMENT);\nlet rgba = new Uint8ClampedArray(4);\nconsole.log(rgba);\nlet bigint = new BigInt64Array(2);\nconsole.log(bigint)\nconsole.log(bigint.BYTES_PER_ELEMENT);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Int8Array(10) [",
+                                "  0, 0, 0, 0, 0,",
+                                "  0, 0, 0, 0, 0",
+                                "]",
+                                "1",
+                                "Float64Array(9) [",
+                                "  0, 0, 0, 0, 0,",
+                                "  0, 0, 0, 0",
+                                "]",
+                                "8",
+                                "Uint8ClampedArray(4) [ 0, 0, 0, 0 ]",
+                                "BigInt64Array(2) [ 0n, 0n ]",
+                                "8",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let rgba = Uint8ClampedArray.of(-10, 255, 12, 256);\nconsole.log(rgba);\n\nlet floats = Float32Array.from(rgba);\nconsole.log(floats);\n\nlet chars = Uint8Array.from(\"hello\");\nconsole.log(chars)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Uint8ClampedArray(4) [ 0, 255, 12, 255 ]",
+                                "Float32Array(4) [ 0, 255, 12, 255 ]",
+                                "Uint8Array(5) [ 0, 0, 0, 0, 0 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let ints = Uint8Array.of(1.23, -12, 3.99, 45000);\nconsole.log(ints);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Uint8Array(4) [ 1, 244, 3, 200 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## ArrayBuffer\n对内存块的不透明引用\n传参是需要分配内存的字节数。\n不允许读取或写入分配的任何字节。但可以创建使用该缓冲区的定型数组,通过这个数组来读取和写入该内存。\n\n定型数组参数\n- 第一个参数 ArrayBuffer\n- 第二个参数 缓冲区字节偏移量\n- 第三个参数 数组长度 (不是字节数)\n省略第二和第三个参数，则数组会使用缓冲区的所有内存  \n省略第三个参数，则会使用从起点位置到缓冲区结束的所有可用内存  \n数组的内存必须是对齐的。字节偏移量也应该是类型大小的倍数。\n\n创建定型数组时没传缓冲区对象，则会自动创建适当大小的一个缓冲区。\n所有定型数组都有一个buffer属性，引用自己底层的ArrayBuffer对象。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let buf = new ArrayBuffer(12);\nconsole.log(buf);\nconsole.log(buf.byteLength);\nlet int32 = new Uint32Array(buf, 4, 2);\nint32[0] = 12;\nint32[1] = 32;\nconsole.log(int32);\nlet float32 = new Float32Array(buf);\nconsole.log(float32);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "ArrayBuffer {",
+                                "  [Uint8Contents]: <00 00 00 00 00 00 00 00 00 00 00 00>,",
+                                "  byteLength: 12",
+                                "}",
+                                "12",
+                                "Uint32Array(2) [ 12, 32 ]",
+                                "Float32Array(3) [ 0, 1.6815581571897805e-44, 4.484155085839415e-44 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "//  埃拉托斯特尼筛选法求小n的最大素数\nfunction sieve(n) {\n  let a = new Uint8Array(n + 1);\n  let max = Math.floor(Math.sqrt(n));\n  let p = 2;\n  while (p < max) {\n    for (let i = 2 * p; i <= n; i += p) {\n      a[i] = 1; // 将p的倍数标记为合数\n    }\n    while (a[++p]); // 空循环 下一个未标记的索引是素数\n  }\n  while (a[n]) n--; // 反向迭代查找最后一个素数\n  console.log(\"a:\", a);\n  return n;\n}\n\nlet result = sieve(20);\nconsole.log(result);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "a: Uint8Array(21) [",
+                                "  0, 0, 0, 0, 1, 0, 1,",
+                                "  0, 1, 1, 1, 0, 1, 0,",
+                                "  1, 1, 1, 0, 1, 0, 1",
+                                "]",
+                                "19",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let ints = new Uint16Array(10);\nlet nints = ints.fill(3).map(x => x * x);\nlet str = nints.join(\"~\");\nconsole.log(str)\nconsole.log(nints);\nconsole.log(ints);\nconsole.log(nints instanceof Uint16Array);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "9~9~9~9~9~9~9~9~9~9",
+                                "Uint16Array(10) [",
+                                "  9, 9, 9, 9, 9,",
+                                "  9, 9, 9, 9, 9",
+                                "]",
+                                "Uint16Array(10) [",
+                                "  3, 3, 3, 3, 3,",
+                                "  3, 3, 3, 3, 3",
+                                "]",
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 定型数组的方法和属性\n- set(array, [offset]) 一次性设置定型数组的多个元素\n- subarray() 返回定型数组的一部分视图，不复制内存，共享原始数组内存， 与slice()的传参类似"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let bytes = new Uint8Array(24);\nlet pattern = new Uint8Array([0, 1, 2, 3]);\nbytes.set(pattern, 2);\nbytes.set([4, 5, 6, 7, 8], 6);\nconsole.log(bytes);\nlet narray = bytes.slice(0, 12)\nconsole.log(narray);\nlet sub = bytes.subarray(3, 11);\nconsole.log(sub);\nsub[0] = 11;\nconsole.log(bytes[3])\nbytes[4] = 44;\nconsole.log(sub[1]);\nconsole.log(narray);\n\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Uint8Array(24) [",
+                                "  0, 0, 0, 1, 2, 3, 4, 5,",
+                                "  6, 7, 8, 0, 0, 0, 0, 0,",
+                                "  0, 0, 0, 0, 0, 0, 0, 0",
+                                "]",
+                                "Uint8Array(12) [",
+                                "  0, 0, 0, 1, 2,",
+                                "  3, 4, 5, 6, 7,",
+                                "  8, 0",
+                                "]",
+                                "Uint8Array(8) [",
+                                "  1, 2, 3, 4,",
+                                "  5, 6, 7, 8",
+                                "]",
+                                "11",
+                                "44",
+                                "Uint8Array(12) [",
+                                "  0, 0, 0, 1, 2,",
+                                "  3, 4, 5, 6, 7,",
+                                "  8, 0",
+                                "]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let buf = new ArrayBuffer(12);\nlet int16 = new Uint16Array(buf, 2, 4);\n\nint16.forEach((value, index) => {\n  int16[index] = index;\n});\n\nconsole.log(int16);\nconsole.log(int16.buffer);\nconsole.log(int16.buffer === buf);\nconsole.log(int16.byteLength);\nconsole.log(int16.byteOffset);\n\nbuf[0] = 1;\nconsole.log(buf);\nint16.buffer[1] = 2;\nconsole.log(buf);\nlet int8 = new Int8Array(buf, 0, 2);\nconsole.log(int8);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Uint16Array(4) [ 0, 1, 2, 3 ]",
+                                "ArrayBuffer {",
+                                "  [Uint8Contents]: <00 00 00 00 01 00 02 00 03 00 00 00>,",
+                                "  byteLength: 12",
+                                "}",
+                                "true",
+                                "8",
+                                "2",
+                                "ArrayBuffer {",
+                                "  [Uint8Contents]: <00 00 00 00 01 00 02 00 03 00 00 00>,",
+                                "  byteLength: 12,",
+                                "  '0': 1",
+                                "}",
+                                "ArrayBuffer {",
+                                "  [Uint8Contents]: <00 00 00 00 01 00 02 00 03 00 00 00>,",
+                                "  byteLength: 12,",
+                                "  '0': 1,",
+                                "  '1': 2",
+                                "}",
+                                "Int8Array(2) [ 0, 0 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## DataView\n显式指定读、写ArrayBuffer值时的字节序。  \n定型数组使用了底层硬件的原生字节序。  \n小端 字节排列顺序从低字节到高字节   \n\n10个set方法10个get方法\n- getType(byteOffset, bool) 第一个参数是字节偏移量，第二参数是否小端模式读取(默认使用大端)  \n- setType(byteOffset, value, bool)\n\nsetInt8()和setUint8() 无需指定大小端模式"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let int8 = new Int8Array(new Int32Array([1]).buffer);\nlet litterEndian = int8[0] === 1;\nconsole.log(litterEndian);\nconsole.log(int8);\nconsole.log(int8.buffer)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                "Int8Array(4) [ 1, 0, 0, 0 ]",
+                                "ArrayBuffer { [Uint8Contents]: <01 00 00 00>, byteLength: 4 }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let buf = new ArrayBuffer(12);\nconsole.log(buf);\nlet bytes = new Uint8Array(buf);\nbytes[3] = 1;\nbytes[7] = 2;\nbytes[8] = 1;\nlet view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);\nlet int = view.getInt32(0);\nconsole.log(int);\nint = view.getInt32(4, false);\nconsole.log(int);\nint = view.getInt32(8, false);\nconsole.log(int);\nint = view.getInt32(8, true);\nconsole.log(int);\n\nview.setInt32(0, 2, true);\nconsole.log(view.getInt16(0, true));\n\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "ArrayBuffer {",
+                                "  [Uint8Contents]: <00 00 00 00 00 00 00 00 00 00 00 00>,",
+                                "  byteLength: 12",
+                                "}",
+                                "1",
+                                "2",
+                                "16777216",
+                                "1",
+                                "2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

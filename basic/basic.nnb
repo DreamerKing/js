@@ -1,0 +1,279 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 基本概念\n\n源码 一组特定的指令，用来决定计算机要执行的任务  \n注释  简洁 及时更新  应该解释为什么而非是什么 \n计算机语言(语法) 指令的格式和组合规则  \n- 解释型  运行时由解释器即时翻译  \n- 编译型  运行前由编译器提前编译成可执行文件 \n\n变量 存放值的容器 记录和管理程序的状态  反应运行状态变化  变量名必须是有效的标识符，不能是关键字或保留字 \n常量 声明时初始化特定的值，在程序运行过程中保持不变 不可重新赋值  \n\n- 静态类型 强类型 指定变量存储值的类型  \n- 动态类型 弱类型 强调值的类型而非变量的类型 变量存储任意类型的值  \n\n值 \n类型  值的集合和值具有行为特性\n类型转换  \n\n字面量  \n运算符  \n表达式  字面量、变量、运算符等组合 通常有返回值，有些表达式存在副作用   \n语句  执行特定任务 通常无返回值  \n语句块 大括号包裹的一组语句  \n- 条件语句  \n- 循环语句 重复执行一系列动作，直到不满足条件 \n- 跳转语句  \n函数  可复用的代码块 可执行  \n作用域 变量的集合以及如何通过标识符访问变量的规则。同一作用域内的变量名必须唯一。作用域可以嵌套,不同作用域可以有同名的变量。\n一个作用域内的代码可访问这个作用域内以及任何包围在它之外的作用域中的变量。  \n\n函数作用域  \n\n全局作用域 声明在任何函数外的顶层声明的变量或未声明直接赋值的变量属于全局作用域  \n\n声明提升  声明“移动”到其所在作用域最前面，在所在作用域内任何位置都可以访问。通常是var声明的变量或函数声明  \n\n块作用域 更细化管理变量的作用域 在{}中使用let/const声明  "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const a = 21;\nconst b = a * 2;\nconsole.log(a, b);\n\n// const age = prompt(\"Please input your age:\");\n// console.log(age);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "21 42",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "foo();\n\na = 2;\n\nfunction foo() {\n  a = 3;\n  console.log(a, globalThis.a);\n  var a;\n}\n\nconsole.log(a, globalThis.a);\nvar a;\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "3 undefined",
+                                "2 2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function foo() {\n  var a = 1;\n  function bar() {\n    var b = 2;\n    function baz() {\n      var c = 3;\n      console.log(a, b, c);\n    }\n    baz();\n    console.log(a, b);\n  }\n  bar();\n  console.log(a);\n}\n\nfoo();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "1 2 3",
+                                "1 2",
+                                "1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function foo() {\n  a = 1;\n}\n\nfoo();\nconsole.log(a, globalThis.a);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "1 1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function foo() {\n  var a = 1;\n  if (a >= 1) {\n    let b = 2;\n    while (b < 5) {\n      let c = b * 2;\n      b++;\n      console.log(a + c);\n    }\n  }\n}\n\nfoo();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "5",
+                                "7",
+                                "9",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 值与类型\n变量无类型，值有类型  \n值的类型有 8种\n+ string\n+ number\n+ bigint\n+ boolean\n+ symbol\n+ null\n+ undefined\n+ object\n\ntypeof 查看值的类型 \n\n对象 \n属性访问的方式 \n+ 中括号 键访问 计算属性 包含不特殊字符的属性  \n+ 属性访问 点号 属性不含空格、连接符等  \n\n\n数组 \n通过数字索引访问  \n自动更新length属性  \n\n函数 \n\n内置类型  \n+ String\n+ Number\n+ Boolean\n+ Object\n+ Function "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "console.log(typeof null);\nconsole.log(typeof undefined);\n\nfunction foo() {\n  return 23;\n}\n\nconsole.log(typeof foo);\n\nconst a = \"hello js\";\nconst b = Math.PI;\nconsole.log(a.length);\nconsole.log(a.toUpperCase());\nconsole.log(b.toFixed(2));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "object",
+                                "undefined",
+                                "function",
+                                "8",
+                                "HELLO JS",
+                                "3.14",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 值的比较 \n值的相等与不等比较，不管比较值的类型是什么，比较的结果都是严格的布尔值。  \n隐式类型转换 某些运算符可能存在的隐式副作用或对象上某些方法的隐式调用。 "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "console.log(2 == \"2\");\nconsole.log(2 != \"2\");\n\nconst a = \"42\";\nconst b = Number(a);\nconst c = a * 1;\nconsole.log(a, b, typeof a, typeof b, typeof c);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                "false",
+                                "42 42 string number number",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 假性值\n- \"\"\n- 0、-0、NaN\n- null、undefined\n- false\n\n只有在非布尔类型值强制转换成布尔类型值时才遵循真假转换规则。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "console.log(null == undefined);\nconsole.log(\"\" == undefined);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                "false",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "##  相等  \n== 允许类型转换情况下值的相等性  \n=== 不允许类型转换的情况下值的相等性  \n比较两个引用类型的值 ==和===都只是检查引用是否匹配，而不关心其引用的值是什么。\n\n- 如果比较的两个值任意一个可能是布尔值(true或false)时,避免使用==,而使用===;\n- 如果比较的两个值任意一个可能是特定值(0、\"\"或[])时,避免使用==,而使用===;\n- 其他情况下都可安全使用==,可以简化代码，提高可读性。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const a = \"42\";\nconst b = 42;\nconsole.log(a == b, a === b);\nconst a1 = [1, 2, 3];\nconst a2 = [1, 2, 3];\nconst c = \"1,2,3\";\nconsole.log(a1 == a2, a1 === a2);\nconsole.log(a1 == c, a2 === c);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true false",
+                                "false false",
+                                "true false",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 不等关系 \n比较有序的值 \n不允许类型转换的“严格不等关系”  \n如果<比较的两个值都是字符串，则比较按字典顺序进行；若其中一边或两边都不是字符串，则转换为数值后进行比较。 \nNaN既不大于也不小于任何其他值。\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const a = 41;\nconst b = \"42\";\nconst c = \"43\";\nconst d = \"foo\";\nconsole.log(a < b, b < c);\nconsole.log(a < d, a > d, a == d);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true true",
+                                "false false false",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 严格模式 \n严格限制某些行为，将代码保持在一个更安全、更适当的规范集合内，引擎更容易优化。 \n- 不允许未声明变量就赋值，隐式自动创建全局变量   "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                ""
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

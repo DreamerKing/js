@@ -1,0 +1,649 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 定义函数\n1. 函数声明\n   + 函数名必需，作为变量名使用;\n   + 函数声明会提升到包含脚本、函数或代码块顶部,函数调用语句可以出现在函数声明语句之前;\n   + 语句块中的函数声明不同版本和引擎处理可能不同。\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function printProps(o) {\n  console.log(typeof printProps);\n  for (let p in o) {\n    console.log(`${p}: ${o[p]}`);\n  }\n}\n\nprintProps({ a: 12, name: \"Dreamer\" });\n\nfunction distance(x1, y1, x2, y2) {\n  let dx = x2 - x1;\n  let dy = y2 - y1;\n  return Math.sqrt(dx * dx + dy * dy);\n}\n\nconsole.log(distance(2, 3, 60, 30));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "function",
+                                "a: 12",
+                                "name: Dreamer",
+                                "63.97655820689325",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "2. 函数表达式\n   + 函数名可选，具名函数表达式函数数名会成为该函数局部作用域中与函数对象的绑定，在函数外部不可见;\n   + 函数表达式在求值之前无法引用，不能在定义之前引用。  \n  立即执行函数表达式 会创建新的变量作用域 (function iife() {} ())\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const fact = function fact(n) {\n  if (n < 1) return 1;\n  return n * fact(n - 1);\n};\n\nconst result = fact(12);\nconsole.log(result);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "479001600",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let a = 2;\n(() => a++)();\n\nconst b = (() => {\n  var a = 1;\n  console.log(a);\n  return ++a;\n})();\n\nconsole.log(a, b);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "1",
+                                "3 2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "3. 箭头函数\n   + 箭头函数从定义自己的环境继承this、arguments、super、new.target等,没有prototype属性,不能用作构造函数;\n   + 箭头函数简写形式返回对象字面量需要使用圆括号包裹。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const createPerson = (name, age) => ({ name, age });\n\nconsole.log(createPerson(\"King\", 23));\n\nlet filtered = [1, null, 2, 3, undefined, 2].filter((x) => x != null);\nconsole.log(filtered);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ name: 'King', age: 23 }",
+                                "[ 1, 2, 3, 2 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 嵌套函数\n内嵌函数可以访问包含自己的函数(或更外层函数)的参数和变量。\n嵌套函数不会继承包含函数的this值。如果嵌套函数被当作函数来调用，其this值为全局对象或undefined。如果作为方法调用，this值为调用它的对象。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function hypotenuse(a, b) {\n  function square(x) {\n    return x * x;\n  }\n  return Math.sqrt(square(a) + square(b));\n}\n\nconsole.log(hypotenuse(2, 3));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "3.605551275463989",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "4. 生成器函数  \n   暂停和恢复执行使得生成器中看似同步的、连续的代码可以在后台异步执行。解决了回调非线性、非局部跳转引发的代码混乱问题,让异步代码看似同步，更容易追踪。\n5. 异步函数\n6. Function构造函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 调用函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "*this是关键字，不允许给this赋值*\nthis关键字不具有变量那样的作用域机制，除了箭头函数，嵌套函数不会继承包含函数的this值。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "1. 函数调用  \n  常规函数调用，非严格模式下，this值为全局对象，严格模式下，this值为undefined;  \n  箭头函数总是继承自身定义所在环境的this值。  \n  条件式调用f?.() 仅在f不是null或undefined时调用函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "\"use strict\";\n// 仅能判断函数调用\nconst strict = function () {\n  \"use strict\";\n  return !this;\n}();\nconsole.log(strict);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "2. 方法调用 \n   普通函数作为对象的方法调用，this值为对象本身(方法所在对象);  \n   箭头函数作为对象的方法调用，this值为定义该箭头函数时所在环境的this值。\n\n  方法链调用 方法调用返回对象可以继续调用返回对象上的方法，当方法没有返回值时可以考虑返回this。 "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function add() {\n  this.result = this.operand1 + this.operand2;\n}\n\nconst sub = () => this.operand2 - this.operand1;\n\nlet calculator = {\n  operand1: 1,\n  operand2: 2,\n  add,\n  sub,\n};\n\ncalculator.add();\nconsole.log(calculator.result);\nconsole.log(calculator.sub());\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "3",
+                                "1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let o = {\n  m: function () {\n    let self = this;\n    console.log(this === o, \"m\");\n    console.log(o.m.prototype);\n\n    f();\n    function f() {\n      console.log(this === o, \"f\");\n      console.log(self === o, \"f\");\n    }\n  },\n  m2() {\n    let self = this;\n    console.log(this === o, \"m\");\n    console.log(o.m2.prototype);\n    const f = () => {\n      console.log(this === o, \"f\");\n      console.log(self === o, \"f\");\n    };\n    f();\n  },\n};\no.m();\no.m2();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true m",
+                                "[object Object]",
+                                "false f",
+                                "true f",
+                                "true m",
+                                "undefined",
+                                "true f",
+                                "true f",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "3. 构造函数调用\n  - 使用new调用，无参构造函数调用可省略圆括号\n  - 构造函数调用会创建一个新的对象，这个对象继承构造函数的prototype属性指定的对象。以这个新建对象作为执行上下文执行函数体，对对象进行初始化。\n  - 正常情况下无需使用return关键字，会隐式返回新创建的对象。若显式返回了某个对象，则该对象变成调用表达式的值。如果构造函数没有使用return返回值，或者返回了一个原始值，则这个值将被忽略，仍以新创建的对象作为构造函数的返回值。\n  - 在new o.m()中o不会用作调用上下文。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function Person(name, age) {\n  this.name = name;\n  this.age = age;\n  // return true\n  return { name };\n}\n\nlet p = new Person(\"King\", 23);\n\nconsole.log(p);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ name: 'King' }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "4. 间接调用(借调)  \n   apply()/call() apply() 期待使用数组值作为参数，而call()使用自己的参数列表作为函数的参数。  \n   bind() 返回新函数，其this不可再被重新绑定\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const o = {\n  a: 23,\n  b: 32,\n};\n\nconst sum1 = function (c, d) {\n  return this.a + this.b + c + d;\n};\n\nconst sum2 = () => this.a + this.b;\n\nconsole.log(sum1.call(o, 2, 6));\nconsole.log(sum2.apply(o, [2, 3]));\n\nconst sum3 = sum1.bind(o);\nconsole.log(sum3(2, 6));\n\nconst o2 = {\n  a: 1,\n  b: 3,\n};\nconsole.log(sum3.call(o2, 2, 6));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "63",
+                                "NaN",
+                                "63",
+                                "63",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "5. 隐式函数调用  \n  + 如果对象有获取方法或设置方法,则查询或设置其属性可能会调用这些方法。\n  + 当对象在字符串上下文中使用时，会调用对象的toString()方法;当对象在数值上下文时，则会调用对象的valueOf()方法。 \n  + 在遍历可迭代对象的元素时，会涉及一系列方法调用。\n  + 模版字面量的标签函数\n  + 代理对象的行为完全由函数控制。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 函数参数  \n函数定义时无需指定参数类型,函数调用时也不对传入的实惨进行类型检查,需要在函数体内显式测试实参类型及个数，以确保以适当的参数调用函数。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 可选形参与默认值  \n可选参数需要放在参数列表最后  \n函数的形参默认表达式在函数调用时求值，不会在定义时求值。函数调用时在未给定参数或给定参数为null或undefind时，求值形参默认表达式。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function getPropertyNames(o = {}, a = []) {\n  for (const p in o) a.push(p);\n  return a;\n}\n\nconst names = getPropertyNames({ a: 12, name: \"King\" });\nconsole.log(names);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[ 'a', 'name' ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 剩余参数与可变长度实参列表 \n剩余形参主要为了取代arguments类数组对象  \n剩余形参的值始终是数组  \n不能给剩余形参定义默认值  "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function max(first = -Infinity, ...rest) {\n  let maxValue = first;\n  for (const n of rest) {\n    if (n > maxValue) maxValue = n;\n  }\n  return maxValue;\n}\n\nconsole.log(max(23, 12, 100, 321, 33));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "321",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 函数调用中使用扩展运算符"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let numbers = [5, 2, -1, 8, 3, 2];\nconsole.log(Math.max(...numbers));\n\nfunction timed(f) {\n  return function (...args) {\n    console.log(\"Name:\", f.name);\n    let startTime = Date.now();\n    try {\n      return f(...args);\n    } finally {\n      console.log(`Exiting ${f.name} cost ${Date.now() - startTime}ms`);\n    }\n  };\n}\n\nfunction benchmark(n) {\n  let sum = 0, i;\n  for (i = 1; i <= n; i++) {\n    sum += i;\n  }\n  return sum;\n}\n\nconsole.log(timed(benchmark)(10000));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "8",
+                                "Name: benchmark",
+                                "Exiting benchmark cost 1ms",
+                                "50005000",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 函数实参解构为形参"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function vectorAdd([x1, y1], [x2, y2]) {\n  return [x1 + x2, y1 + y2];\n}\n\nconsole.log(vectorAdd([1, 2], [3, 2]));\n\nfunction vectorMutiply({ x = 0, y = 0 } = {}, scalar = 0) {\n  return [x * scalar, y * scalar];\n}\n\nconsole.log(vectorMutiply({ x: 2, y: 3 }, 0.6));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[ 4, 4 ]",
+                                "[ 1.2, 1.7999999999999998 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function arrayCopy(\n  from = [],\n  to = [],\n  n = from.length,\n  fromIndex = 0,\n  toIndex = 0,\n) {\n  let valuesToCopy = from.slice(fromIndex, fromIndex + n);\n  to.splice(toIndex, 0, ...valuesToCopy);\n  return to;\n}\n\nlet a = [1, 2, 3, 4, 5, 6], b = [9, 8, 7];\narrayCopy(a, b, 3, 1, 2);\nconsole.log(b);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[ 9, 8, 2, 3, 4, 7 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 函数作为值\n\n函数可以作为值赋给变量、保存为对象的属性或数组的元素、作为参数传递给其他函数、作为函数的返回值等"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function square(x) {\n  return x * x;\n}\n\nlet s = square;\nconsole.log(s(4));\nconsole.log(square(4));\n\nconst o1 = {\n  square,\n};\n\nconsole.log(o1.square(4));\n\nconst a = [(x) => x ** x, 6];\nconsole.log(a[0](a[1]));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "16",
+                                "16",
+                                "16",
+                                "46656",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function add(x, y) {\n  return x + y;\n}\n\nfunction subtract(x, y) {\n  return x - y;\n}\n\nfunction multiply(x, y) {\n  return x * y;\n}\n\nfunction divide(x, y) {\n  return x / y;\n}\n\nfunction operate(operator, operand1, operand2) {\n  return operator(operand1, operand2);\n}\n\nlet i = operate(add, operate(add, 2, 3), operate(multiply, 4, 5));\nconsole.log(i);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "25",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 闭包  \n外部函数执行完返回的内部函数依然可以访问声明这个函数时的词法作用域及其外部函数的参数和变量。  \n模块模式  私有化内部实现系统，同时对外公开可访问的API。  \n词法作用域是闭包的基础。闭包的一个重要应用就是模块模式,模块模式是js在代码组织模式中的最普遍的方法。\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function Ninja(){\n  var feints = 0;\n  this.getFeits = function(){\n      return feints;\n  };\n  this.feint = function(){\n      feints++;\n  }\n}\n\nlet n = new Ninja();\nconsole.log(n.feints);\nn.feint();\nconsole.log(n.getFeits());\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "undefined",
+                                "1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function makeAdd(x) {\n  function add(y) {\n    return x + y;\n  }\n  return add;\n}\n\nconsole.log(makeAdd(2)(3));\n\nconst plusSix = makeAdd(6);\n\nconsole.log(plusSix(12));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "5",
+                                "18",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function User(username) {\n  let password;\n  function doLogin(pwd) {\n    password = pwd;\n    console.log(\"login ...\", username, password);\n  }\n\n  return {\n    login: doLogin,\n  };\n}\n\nconst king = User(\"king\");\nking.login(321);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "login ... king 321",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let outerValue = \"outerValue\";\nlet later;\n\nfunction wrapper() {\n  let innerValue = \"innerValue\";\n  function innerFn() {\n    console.log(innerValue, outerValue, outerValue2);\n  }\n  later = innerFn;\n  innerValue = \"innerValue update\";\n  outerValue = \"outerValue update\";\n}\n\nwrapper();\n\nlet outerValue2 = \"later outerValue2\";\nlater();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "innerValue update outerValue update later outerValue2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function makeFun() {\n  let name = \"DK\";\n  function showName(text) {\n    console.log(name, text);\n  }\n  return showName;\n}\n\nconst showName = makeFun();\nshowName(\"hi\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "DK hi",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const Counter = (function () {\n  let privateConter = 0;\n\n  function changeBy(val) {\n    privateConter += val;\n  }\n\n  return {\n    increment() {\n      changeBy(1);\n    },\n    decrement() {\n      changeBy(-1);\n    },\n    value: privateConter, // 为什么属性值不会改变\n    value2() {\n      return privateConter;\n    },\n  };\n})();\n\nCounter.increment();\nconsole.log(Counter.value, Counter.value2());\n\nCounter.increment();\nconsole.log(Counter.value, Counter.value2());\n\nCounter.decrement();\nconsole.log(Counter.value, Counter.value2());\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "0 1",
+                                "0 2",
+                                "0 1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const makeCounter = function () {\n  let privateCounter = 0;\n  function changeBy(val) {\n    privateCounter += val;\n  }\n\n  return {\n    increment() {\n      changeBy(1);\n    },\n    decrement() {\n      changeBy(-1);\n    },\n\n    value() {\n      return privateCounter;\n    },\n  };\n};\n\nconst counter1 = makeCounter();\nconst counter2 = makeCounter();\ncounter1.increment();\nconsole.log(counter1.value(), counter2.value());\n\ncounter1.increment();\ncounter2.increment();\nconsole.log(counter1.value(), counter2.value());\ncounter1.decrement();\nconsole.log(counter1.value(), counter2.value());\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "1 0",
+                                "2 1",
+                                "1 1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function showItem(item) {\n  console.log(item);\n}\n\nfunction showArrayItem(arr) {\n  const temps = [];\n  const len = arr.length;\n  let i = 0;\n  for (; i < len; i++) {\n    (function (item) {\n      temps[i] = function () {\n        showItem(item);\n      };\n    })(arr[i]);\n  }\n  return temps;\n}\n\nconst a = [\"A\", \"B\", \"C\"];\nconst b = showArrayItem(a);\nb[2]();\nb[1]();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "C",
+                                "B",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

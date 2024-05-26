@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>a</title>
+  <style>
+    #draggable {
+      width: 200px;
+      height: 200px;
+      background-color: red;
+      position: absolute;
+      top: -10000px;
+    }
+  </style>
+</head>
+<body>
+  <div id="draggable"></div>
+
+  <script>
+    const draggable = document.getElementById("draggable");
+
+    const channel = new BroadcastChannel("web_channel");
+
+    channel.onmessage = (e) => {
+      draggable.style.left = -window.innerWidth + e.data.left + "px";
+      draggable.style.top = e.data.top + "px";
+    };
+  </script>
+</body>
+</html>

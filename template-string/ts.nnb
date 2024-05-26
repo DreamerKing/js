@@ -1,0 +1,98 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 模版字符串\n\n不带标签的模版字符串  \n带标签的模版字符串 标签函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "+ 可以包含未转义字符\n+ 占位符中的表达式前后空格、换行、缩进不会包含在字符串中\n+ 标准转义序列与字符串字面量相同"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const c = \"cc1\";\nconst str = `a${c}a\\nb`;\nconsole.log(str);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "acc1a",
+                                "b",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function example(p1, ...p) {\n  console.log(p1, p);\n}\nconst b = \"b\", c = 12, d = () => \"hello\";\nexample`a ${b} | ${c} * ${b + c} | ${d}`;\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[ 'a ', ' | ', ' * ', ' | ', '' ] [ 'b', 12, 'b12', [Function: d] ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const loadJson = (template, ...values) => {\n  let result = template[0];\n  for (let idx = 1; idx < template.length; idx++) {\n    result += JSON.stringify(values[idx - 1]) + template[idx];\n  }\n  return result;\n};\n\nconst loadJson2 = (template, ...values) => {\n  return template.reduce((pre, cur, i) =>\n    `${pre} ${JSON.stringify(values[i - 1])} ${cur}`\n  );\n};\n\nconst a = [1, 2, 3];\nconst b = { name: \"King\", age: 23 };\nconst c = \"Hello\";\n\nconst result = loadJson`a = ${a}\\t b = ${b} \\t c = ${c} |`;\nconsole.log(result);\n\nconsole.log(loadJson2`a = ${a}\\t b = ${b} \\t c = ${c} |`);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "a = [1,2,3]\t b = {\"name\":\"King\",\"age\":23} \t c = \"Hello\" |",
+                                "a =  [1,2,3] \t b =  {\"name\":\"King\",\"age\":23}  \t c =  \"Hello\"  |",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function example(template) {\n  const first = template.raw[0];\n  console.log(first);\n  console.log(first.length);\n  console.log(first[0])\n}\n\nexample`\\u000A\\x0a\\n`"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "\\u000A\\x0a\\n",
+                                "12",
+                                "\\",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

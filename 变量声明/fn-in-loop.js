@@ -31,12 +31,13 @@ for (var i = 0; i < 10; i++) {
  }
  */
 
- let obj = { 
-     name: "King",
-     age: 20
- }
+let obj = {
+  name: "King",
+  age: 20
+}
 
- let arrs = [1, 2]
+
+let arrs = [1, 2, 3]
 /* 
 
  for (const key in obj) {
@@ -47,7 +48,7 @@ for (var i = 0; i < 10; i++) {
 
  */
 
- for (const value of arrs) {
+/*  for (const value of arrs) {
       funs.push(function() {
         console.log(value);
       });
@@ -55,6 +56,18 @@ for (var i = 0; i < 10; i++) {
 
 funs.forEach(function(fn){
     fn();
-});
+}); */
 
+for (let i = 0, len = arrs.length; i < len; i++) {
+  if (i == 1) {
+    arrs.push(2);
+  }
+  console.log(i, len, arrs.length)
+}
 
+let points = [{ x: 1, y: 2 }, { x: 3, y: 4 }]
+let [{ x: x1, y: y1 }, { x: x2, y: y2 }] = points;
+let points2 = [{ x: x1, y: y1 }, { x: x2, y: y2 }];
+
+console.log(points == points2);
+console.log(points2)

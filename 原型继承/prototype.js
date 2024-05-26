@@ -20,3 +20,12 @@ user.fullName = "King Dreamer";
 console.log(user.name);
 console.log(user.surname);
 console.log(admin.fullName, admin.isAdmin);
+
+class Animal {
+    static [Symbol.hasInstance](obj) {
+        if (obj.canEat) return true;
+    }
+}
+
+let obj = { canEat: true };
+console.log(obj instanceof Animal);

@@ -1,0 +1,508 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 异步\n\n异步不只对应用的性能至关重要，而且成为代码易写性和维护性方面的关键因素。回调是使异步成为可能的基本方法，但是只使用回调编码存在两种缺陷：控制反转信任缺失和线性理解能力缺失。为了避免这两个缺陷，ES6引入了新的机制(模式)：Promis和生成器。\n\nPromis是对“未来值”的与时间无关的封装，使得不管这个值是否已经可以，你都可以推导和组合使用它们。另外，通过一种可信任的、可组合的Promise机制，分发回调它们也有效解决了控制反转的信任问题。\n\n生成器为函数引入了一种的新的执行模式，其中生成器可暂停在yield点上,并在之后被异步调用。暂停与继续的能力使得生成器中同步的、看似连续的代码可以在后台异步执行。通过这种方式，解决了回调非线性、非局部跳转引发的代码混乱问题，因而让异步的代码看似同步，更容易追踪。熟悉Promise和生成器的组合是理解高级异步机制的基础。\n\n异步编程的核心 管理程序中现在执行的部分和将来执行的部分之间的关系。\n程序中将来执行的部分并不一定在现在运行的部分执行完之后就立即执行。可以通过回调来观察异步执行的结果。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "var a = { index: 1 };\nconsole.log(a);\na.index++;\nconsole.log(a);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ index: 1 }",
+                                "{ index: 2 }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function now() {\n  return 21;\n}\n\nfunction later() {\n  answer = answer * 2;\n  console.log(\"later:\", answer);\n}\n\nlet answer = now();\nvoid setTimeout(later, 100);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "later: 42",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 事件循环  \n处理程序中多个块的执行机制，且执行每个块时调用js引擎。引擎本身没有时间概念，只是一个按需执行js任意代码片段的环境。“事件”调度总是由包含它的宿主环境进行。setTimeout()并没有把注册的回调函数挂在事件循环中去，而只是设置一个定时器。当定时器到期后，环境会将注册的回调放入事件循环中等待将来的某个时刻执行这个回调(通常没有抢占式的方式支持直接将其排到队首)。执行时间要根据时间队列的状态决定。\n程序通常分为很多小块，在事件循环队列中一个接一个地执行,所有这些块共享对程序作用域和状态的访问，对状态的修改都是在之前累积的修改之上进行。另外，一些不相关的其他事件代码也可能插入到队列中。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const eventLoop = [];\nlet event;\nwhile (true) {\n  if (eventLoop.length > 0) {\n    event = eventLoop.shift();\n    try {\n      event();\n    } catch (e) {\n      reportError(e);\n    }\n  }\n}\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 并行线程\n异步是关于现在和将来的时间间隙，而并行是关于能够同时发生的事情。并行计算最常见的工具是进程和线程，它们独立运行，并可能同时运行:在不同的处理器，甚至不同的计算机上，但多个线程能够共享单个进程的内存。\n\n并发是指多个事件链随时间发展交替执行。通常并发执行任务需要某种形式的交互协调。\n\n事件循环把自身的工作分成一个个任务并顺序执行，不允许对共享内存的并行访问和修改。通过分立线程中彼此合作的事件循环，并行和顺序执行可以共存。并行线程的交替执行与异步事件的交替调度，其粒度是完全不同的。\n\n在同一程序中并发地交替运行它们的任务时，如果这些任务相关，通常通过`作用域`或`DOM间接交互`进行协调以避免竞态出现引起的不确定性。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let result = {};\nfunction foo(x) {\n  result.foo = x * 2;\n}\n\nfunction bar(y) {\n  result.bar = y * 2;\n}\n\nfunction baz() {\n  console.log(result);\n}\n\nasyncOption(1, foo);\nasyncOption(3, bar);\n\nsetTimeout(baz, 2000);\n\nfunction asyncOption(z, fn) {\n  const random = Math.floor(Math.random() * 2000);\n  console.log(`random:${fn.name}`, random);\n  setTimeout(fn, random, z);\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "random:foo 1126",
+                                "random:bar 288",
+                                "{ bar: 6, foo: 2 }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a, b;\nfunction foo(x) {\n  a = x * 2;\n  baz();\n}\n\nfunction bar(y) {\n  b = y * 2;\n  baz();\n}\n\nfunction baz() {\n  console.log(a, b);\n}\n\nasyncOption(1, foo);\nasyncOption(3, bar);\n\nfunction asyncOption(z, fn) {\n  const random = Math.floor(Math.random() * 2000);\n  console.log(`random:${fn.name}`, random);\n  setTimeout(fn, random, z);\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "random:foo 891",
+                                "random:bar 1922",
+                                "2 undefined",
+                                "2 6",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a, b;\nfunction foo(x) {\n  a = x * 2;\n  if (a && b) {\n    baz();\n  }\n}\n\nfunction bar(y) {\n  b = y * 2;\n  if (a && b) {\n    baz();\n  }\n}\n\nfunction baz() {\n  console.log(a, b);\n}\n\nasyncOption(1, foo);\nasyncOption(3, bar);\n\nfunction asyncOption(z, fn) {\n  const random = Math.floor(Math.random() * 2000);\n  console.log(`random:${fn.name}`, random);\n  setTimeout(fn, random, z);\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "random:foo 989",
+                                "random:bar 1546",
+                                "2 6",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a;\n\nfunction foo(x) {\n  a = x * 2;\n  baz();\n}\n\nfunction bar(x) {\n  a = x / 2;\n  baz();\n}\n\nfunction baz() {\n  console.log(a);\n}\n\nasyncOption(1, foo);\nasyncOption(3, bar);\n\nfunction asyncOption(z, fn) {\n  const random = Math.floor(Math.random() * 2000);\n  console.log(`random:${fn.name}`, random);\n  setTimeout(fn, random, z);\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "random:foo 121",
+                                "random:bar 1314",
+                                "2",
+                                "1.5",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a;\n\nfunction foo(x) {\n  if (!a) {\n    a = x * 2;\n    baz();\n  }\n}\n\nfunction bar(x) {\n  if (!a) {\n    a = x / 2;\n    baz();\n  }\n}\n\nfunction baz() {\n  console.log(a);\n}\n\nasyncOption(1, foo);\nasyncOption(3, bar);\n\nfunction asyncOption(z, fn) {\n  const random = Math.floor(Math.random() * 2000);\n  console.log(`random:${fn.name}`, random);\n  setTimeout(fn, random, z);\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "random:foo 969",
+                                "random:bar 255",
+                                "1.5",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "// 编译器语句重排可能会产生副作用\nfunction foo() {\n  console.log(\"foo:\", b);\n  return 1;\n}\n\nlet a, b, c;\nc = {\n  get bar() {\n    console.log(\"c.bar\", a);\n    return 1;\n  },\n};\n\na = 10;\nb = 30;\na += foo();\nb += c.bar;\n/*\na = 10 + foo();\nb = 30 + c.bar;\n*/\nconsole.log(a + b);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "foo: undefined",
+                                "c.bar 11",
+                                "42",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 回调\n回调时编写和处理js中异步逻辑最常用也是最基础的模式。\n回调表达异步流程的方式是非线性的，与人类习惯的线性的、顺序的、阻塞的、单线程思维模式不同。\n函数作为独立不可分割的运行单元。在函数内部，语句以可预测的顺序执行，在函数外部，事件的运行顺序可以有多种可能。\n\n快速的上下文切换 多任务 任务编排和执行 异步事件处理\n\n嵌套回调与链式回调 \n\n函数是否是异步的需要看内部实现或函数说明\n\n回调最大的问题是控制反转,将控制权交给第三方来调用，导致信任链完全断裂。\n缺乏顺序性和可信任性。\n\n回调的问题:\n- 回调是同步还是异步不确定;\n- 回调时间不确定;\n- 回调次数不确定;\n- 回调所需环境和传参可能不够;\n- 回调可能吞掉出现的错误异常。\n\n回调函数的问题\n1. 回调错误难以处理 不能使用try-catch捕获异步异步回调出现的错误异常, 常出现错误丢失问题。\n2. 多任务处理比较棘手 相互依赖需要顺序执行的任务,常常需要层层嵌套，导致代码复杂度变高，难以理解。而无相互依赖需要并行执行的任务,其错误处理和执行结果检查也比较麻烦。\n\n\n分离回调 分成功回调和错误回调\n错误优先 回调函数第一个参数保留用作错误对象,第二个之后的参数作为成功回调的返回的结果。回调具有报告错误和传递结果的作用。\n\n永远异步调用回调。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function doA(fn) {\n  doLabel(\"A\");\n  setTimeout(() => {\n    fn();\n  }, 200);\n}\n\nfunction doC(fn) {\n  doLabel(\"C\");\n  fn();\n}\n\nfunction doLabel(label) {\n  console.log(label);\n}\n\ndoA(function () {\n  doLabel(\"B\");\n  doC(function () {\n    doLabel(\"D\");\n  });\n  doLabel(\"E\");\n});\n\ndoLabel(\"F\");\n\n// A B C D E F\n// F A B E C D\n// A F B C E D\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "A",
+                                "F",
+                                "C",
+                                "D",
+                                "E",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function timeoutify(fn, delay) {\n  let intv = setTimeout(function () {\n    intv = null;\n    fn(new Error(\"Timeout!\"));\n  }, delay);\n\n  return function (...args) {\n    if (intv) {\n      clearTimeout(intv);\n      fn.apply(this, args);\n    }\n  };\n}\n\nfunction asyncOption(timeout, fn) {\n  console.log(\"asyncOption\");\n  setTimeout(fn, timeout);\n}\n\nfunction foo(err, data) {\n  if (err) {\n    console.error(\"e:\", err);\n  } else {\n    console.log(data);\n  }\n}\n\nasyncOption(500, timeoutify(() => foo(\"opps!\", \"hi!\"), 100));\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "asyncOption",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stderr",
+                            "value": [
+                                "e: opps!",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function asyncify(fn) {\n  const originFn = fn;\n  let it = setTimeout(function () {\n    it = null;\n    if (fn) fn();\n  }, 0);\n  fn = null;\n  return function (...args) {\n    if (it) {\n      fn = originFn.bind.apply(originFn, [this, ...args]);\n    } else {\n      originFn.apply(this, args);\n    }\n  };\n}\n\nfunction result(data) {\n  console.log(a);\n}\n\nfunction asyncOption(timeout, fn) {\n  setTimeout(fn, timeout);\n}\n\nlet a = 0;\n\nasyncOption(100, asyncify(result));\n\na++;\n\nconsole.log(\"done\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "done",
+                                "1",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Promise\n\n观察结果的与时间无关的对象，封装了依赖于时间的状态，代表未来结果的占位符，可以按照可预测的方式组合，而不用关心时序或底层的结果。\n时间上统一到将来的时间，将所有操作都变成异步，让结果是可预测的，可追踪的。\n\n完成值总是明确给出的，而拒绝值可能是直接设置的，也可能是运行异常隐式得出的值。\n\nPromise决议后就成为外部不可变的值，可以安全的将这个值传递给第三方，并确信它不会被有意无意地修改。\n\nPromise是一种封装和组合未来值的易于复用的机制。\n\nPromise仅是一种观察异步操作结果的方式，并不会创建异步操作。\n\n关注点分离\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function add(xPromise, yPromise) {\n  return Promise.all([xPromise, yPromise]).then(([x, y]) => x + y);\n}\n\nfunction asyncValue(x, delay) {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => resolve(x), delay);\n  });\n}\n\nconst sum = await add(asyncValue(2, 1000), asyncValue(6, 500));\nconsole.log(sum);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "8",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo(x) {\n  return listener;\n}\n// evt 分离的关注点之间一个中立的第三方协商机制\nconst evt = foo(42);\nevt.on(\"success\", () => { });\nevt.on(\"error\", () => { });\n// 让bar监听foo的完成\nbar(evt);\nbaz(evt);\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo(x) {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => resolve(x), 1000);\n  });\n}\n\nfunction bar(promise) {\n  promise.then(function (v) {\n    console.log(\"v:\", v);\n  }, function (e) {\n    console.error(\"e: \", e);\n  });\n}\n\nconst p = foo(42);\nbar(p);\n\nfunction baz(v) {\n  console.log(\"baz v:\", v);\n}\n\nfunction oopsBaz(e) {\n  console.error(\"oopsBaz :\", e);\n}\np.then(baz, oopsBaz);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "v: 42",
+                                "baz v: 42",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "async function fetchSeries(urls) {\n  const result = [];\n  for (const url of urls) {\n    const response = await fetch(url);\n    if (response.ok) {\n      result.push(await response.json());\n    } else {\n      throw new Error(`fetch ${url} occusr error status ${response.status}`);\n    }\n  }\n  return result;\n}\n\nconst results = await fetchSeries([\n  \"data/1.json\",\n  \"data/2.json\",\n  \"data/3.json\",\n]);\nconsole.log(results);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "TypeError",
+                                "message": "Failed to parse URL from data/1.json",
+                                "stack": "    at node:internal/deps/undici/undici:12500:13\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo() {\n  return new Promise((resolve, reject) => {\n    resolve(new Error(\"opps\"));\n  });\n}\n\nconsole.log(\"before foo\");\nfoo().then(\n  (res) => console.log(\"then\", res),\n  (err) => console.error(\"err:\", err),\n)\n  .finally((res) => console.log(\"finally:\", res));\nconsole.log(\"after foo\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "before foo",
+                                "after foo",
+                                "then Error: opps",
+                                "    at <Cell 22> [3, 11]",
+                                "    at new Promise (<anonymous>)",
+                                "    at foo (<Cell 22> [2, 9])",
+                                "    at <Cell 22> [8, 0]",
+                                "    at <Cell 22> [12, 46]",
+                                "    at Script.runInContext (node:vm:148:12)",
+                                "    at Script.runInNewContext (node:vm:153:17)",
+                                "    at Object.runInNewContext (node:vm:309:38)",
+                                "    at C (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)",
+                                "    at t.execCode (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)",
+                                "finally: undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo() {\n  return new Promise((resolve, reject) => {\n    resolve(new Error(\"opps\"));\n  });\n}\n\nconsole.log(\"before foo\");\nfoo()\n  .then(\n    (res) => console.log(\"then\", res),\n    (err) => console.error(\"err:\", err),\n  )\n  .catch((err) => console.error(\"catch:\", err))\n  .finally((res) => console.log(\"finally:\", res));\nconsole.log(\"after foo\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "before foo",
+                                "after foo",
+                                "then Error: opps",
+                                "    at <Cell 23> [3, 11]",
+                                "    at new Promise (<anonymous>)",
+                                "    at foo (<Cell 23> [2, 9])",
+                                "    at <Cell 23> [8, 0]",
+                                "    at <Cell 23> [14, 46]",
+                                "    at Script.runInContext (node:vm:148:12)",
+                                "    at Script.runInNewContext (node:vm:153:17)",
+                                "    at Object.runInNewContext (node:vm:309:38)",
+                                "    at C (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)",
+                                "    at t.execCode (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)",
+                                "finally: undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo() {\n  return new Promise((resolve, reject) => {\n    resolve(new Error(\"opps\"));\n  });\n}\n\nconsole.log(\"before foo\");\nfoo()\n  .then((res) => console.log(\"then\", res))\n  .catch((err) => console.error(\"err:\", err))\n  .finally((res) => console.log(\"finally:\", res));\nconsole.log(\"after foo\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "before foo",
+                                "after foo",
+                                "then Error: opps",
+                                "    at <Cell 23> [3, 11]",
+                                "    at new Promise (<anonymous>)",
+                                "    at foo (<Cell 23> [2, 9])",
+                                "    at <Cell 23> [8, 0]",
+                                "    at <Cell 23> [14, 46]",
+                                "    at Script.runInContext (node:vm:148:12)",
+                                "    at Script.runInNewContext (node:vm:153:17)",
+                                "    at Object.runInNewContext (node:vm:309:38)",
+                                "    at C (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)",
+                                "    at t.execCode (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)",
+                                "finally: undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function bar() {\n  return Promise.resolve(new Error(\"ok\"));\n  return Promise.reject(\"opps\");\n}\n\nfunction foo() {\n  return new Promise((resolve, reject) => {\n    resolve(bar());\n  });\n}\n\nconsole.log(\"before foo\");\nfoo()\n  .then(\n    (res) => console.log(\"then:\", res),\n    (err) => console.error(\"err:\", err),\n  )\n  .catch((err) => console.error(\"catch:\", err))\n  .finally((res) => console.log(\"finally:\", res));\nconsole.log(\"after foo\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "before foo",
+                                "then: Error: ok",
+                                "    at bar (<Cell 25> [2, 9])",
+                                "    at <Cell 25> [8, 11]",
+                                "    at new Promise (<anonymous>)",
+                                "    at foo (<Cell 25> [7, 9])",
+                                "    at <Cell 25> [13, 0]",
+                                "    at <Cell 25> [18, 46]",
+                                "    at Script.runInContext (node:vm:148:12)",
+                                "    at Script.runInNewContext (node:vm:153:17)",
+                                "    at Object.runInNewContext (node:vm:309:38)",
+                                "    at C (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)",
+                                "finally: undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const p1 = {\n  then(res) {\n    console.log(\"p1:\", res);\n    return \"done\";\n  },\n};\n\nconst p2 = p1.then((res) => {\n  console.log('then:', res)\n});\n\nconsole.log('p2:', p2);\n\nconst p3 = p1.then('ok');\nconsole.log('p3:', p3);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "p1: [Function (anonymous)]",
+                                "p2: done",
+                                "p1: ok",
+                                "p3: done",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function foo() {\n  Promise.reject()\n}"
+            ],
+            "outputs": []
+        }
+    ]
+}

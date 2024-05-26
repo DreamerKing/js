@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storage</title>
+</head>
+<body>
+  <input id="input" name="name" />
+  <script>
+    const input = document.getElementById("input");
+    input.addEventListener("change", (e) => {
+      const value = e.target.value;
+      localStorage.setItem("ls-name", value);
+    });
+    window.addEventListener("storage", (e) => {
+      input.value = e.newValue;
+    })
+  </script>
+</body>
+</html>

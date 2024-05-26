@@ -1,0 +1,32 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 基本概念\n协作式多任务处理 操作系统不断切换执行权，执行权切换由程序自身让渡，一个程序执行时不可中断。\n抢占式多任务处理 操作系统通过调度方案决定程序执行。\n\n进程有各自的内存空间，不共享内存并且拥有各自的指令指针。可以在同一时间片内执行不同的指令。\n线程共享所属的同一进程的内存空间，每个线程拥有自己的指令指针。\n\n并发性 任务在重叠的时间片中运行。并发可能在没有并行的情况下实现。\n并行性 任务实实在在地在同一时间里运行。\n并行性是并发性的子集。  \n线程不会自动提供并行性。系统硬件必须通过多核CPU才能实现，并且操作系统还需去调度线程各自在独立的CPU内核上去运行。\n线程同步和上下文切换存在开销。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## WebWorker\n\nnew Woker(filename, options)\noptions\n- type classic|module\n- credentials omit|same-orgin|include\n- name\n\nimportScripts() 同步加载脚本 脚本模式\n\n- worker.postMessage(msg) 向worker发送信息，并在事件循环中唤起self.onmessage函数处理传递的msg参数\n- worker.onmessage worker内的self.postMessage被调用时被激活\n- worker.onerror  worker内的抛出错误时被激活，错误会在调e.preventDefault()之前一直向上层冒泡\n- worker.onmessagerror worker接受到不可序列化的消息时被激活\n- worker.terminate() 如果调用这个方法，worker会被立即终止，之后的所有worker.postMessage()调用都会静默失败。\n\n在专用worker中，全局变量self是WorkerGlobalScope的实例。\n\n页面关闭，对应的worker都自动关闭。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## SharedWebWorker\n共享Worker可以在不同浏览器环境之间，如不同窗口(选项卡)、不同的iframe,甚至不同的Web Worker之间相互访问。在每个worker中都有各自不同的SharedWorkerGlobalScope类的实例self。共享Worker只能运行在同域环境中。共享worker在某个窗口中初始化之后会被多个窗口共享，即使最初初始化的窗口关闭了。\n共享worker与一个页面或多个页面关联。\n\n对象克隆规则限制\n缺少disconnect和close事件\n容易造成内存泄漏"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Service worker\n充当浏览器与服务器之间的代理。可以在后台存活和运行，而不用管页面是否打开。\nservice worker与零个页面或多个页面关联。\n主要用于执行网站或单页应用程序的缓存管理。\n无法访问DOM,也不能阻塞请求。只允许在HTTPS协议和localhost下运行。serivce worker实例无法在隐身窗口和普通窗口之间通信。\n\nservice worker只用于执行异步操作。localStorage API不可以用。异步的indexdDB API可以用。\nservice worker禁用了Top await。\n\n跟踪service worker状态，常用的方法时self.caches和indexedDB。"
+            ],
+            "outputs": []
+        }
+    ]
+}

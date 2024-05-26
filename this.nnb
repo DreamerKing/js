@@ -1,0 +1,32 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# this\n\n\n\n\nthis并不指向函数本身，其值由函数的声明方式和调用方式决定。与this紧密关联的是对象原型机制，这种机制是一个属性查找链，与寻找词法作用域变量的方式类似。\n\n引用类型的值是三点的结合 (base, name, strict)\n\n- base 是对象。\n- name 是属性。\n- 当 use strict 生效，strict 为真。\n\n箭头函数没有有自己的this。其中this 值取决于外部常规函数。\n\n箭头函数要点：\n\n- 词法绑定最近的外层非箭头函数，没有自己的 this、prototype、arguments、super和new.target,不能作用构造函数；\n- 固定的this 绑定，即便使用 call、apply 或 bind 都不能改变；\n- 内部不能使用 yield,不能用作 generator 函数\n- 是匿名函数，不能调用自己\n\n不适用箭头函数的场景：\n\n- 用作对象的方法，并且在方法内部使用了 this、arguments 或 super 等；\n- 需要动态 this 或引用自身；\n- 不能用做被继承对象；\n- 方法体中语句复杂。\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "\"use strict\";\n\nfunction foo() {\n  console.log(this.bar, this.baz);\n}\n\nvar bar = 23;\nconst baz = 12;\n\nconst obj = {\n  bar: \"32\",\n  baz: 21,\n  foo,\n};\n\nconst obj2 = {\n  bar: \"322\",\n  baz: 212,\n};\n\nfoo();\nobj.foo();\nobj.foo.call(obj2);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "23 12",
+                                "32 21",
+                                "322 212",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

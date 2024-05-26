@@ -1,0 +1,97 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 原型  \n## 属性查找 \n当访问对象的某个属性时，先查找对象自身是否存在这个属性，若不存在，则自动使用对象内部原型引用查找另外一个对象来寻找这个属性。 (委托模式)\n从一个对象到后备对象的内部原型引用的链接是在对象创建时发生，后续也可通过setPrototypeOf()方法更改。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const foo = {\n  a: 42,\n};\n\nconst bar = Object.create(foo);\n\nbar.b = \"hi\";\n\nconsole.log(bar.a, bar.b, foo.b);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "42 hi undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function MyObject(name, message) {\n  this.name = name;\n  this.message = message;\n  this.getName = function () {\n    return this.name;\n  };\n  this.getMessage = function () {\n    return this.message;\n  };\n}\n\nconst a = new MyObject(\"Dreamer\", \"Hello\");\nconsole.log(a.getName(), a.getMessage());\nconst b = new MyObject(\"Dreamer2\", \"Hello2\");\nconsole.log(b.getName(), b.getMessage());\nconsole.log(a);\nconsole.log(a.constructor == MyObject);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Dreamer Hello",
+                                "MyObject {",
+                                "  name: 'Dreamer',",
+                                "  message: 'Hello',",
+                                "  getName: [Function (anonymous)],",
+                                "  getMessage: [Function (anonymous)]",
+                                "}",
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function MyObject(name, message) {\n  this.name = name.toString();\n  this.message = message.toString();\n}\n\n// 重新定义原型\nMyObject.prototype = {\n  getName: function () {\n    return this.name;\n  },\n  getMessage: function () {\n    return this.message;\n  },\n};\n\nconst a = new MyObject(\"Dreamer\", \"Hello\");\nconsole.log(a.getName(), a.getMessage());\nconst b = new MyObject(\"Dreamer2\", \"Hello2\");\nconsole.log(b.getName(), b.getMessage());\nconsole.log(a);\nconsole.log(a.constructor == MyObject);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Dreamer Hello",
+                                "false",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function MyObject(name, message) {\n  this.name = name;\n  this.message = message;\n}\n\nMyObject.prototype.getName = function () {\n  return this.name;\n};\n\nMyObject.prototype.getMessage = function () {\n  return this.message;\n};\n\nconst a = new MyObject(\"Dreamer\", \"Hello\");\nconsole.log(a.getName(), a.getMessage());\nconst b = new MyObject(\"Dreamer2\", \"Hello2\");\nconsole.log(b.getName(), b.getMessage());\nconsole.log(a.constructor === MyObject);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Dreamer Hello",
+                                "Dreamer2 Hello2",
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

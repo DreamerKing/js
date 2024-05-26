@@ -1,0 +1,37 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 作用域  \n- 变量查找\n- 作用域链  \n- 闭包  "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 作用域  \n每个执行上下文都有一个与之关联的词法环境，它包含了在上下文中的定义的标识符映射表。  \n作用域是一套存取变量的规则,用于确定在何处以及如何查找变量(标识符),变量的可见范围。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let phrase = \"Hello\";\n\nif (true) {\n  let user = \"John\";\n\n  function sayHi() {\n    console.log(`${phrase}, ${user}`);\n  }\n}\n\nsayHi();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Hello, John",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
