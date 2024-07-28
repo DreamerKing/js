@@ -1,33 +1,3 @@
-# 属性
-
-1. prototype
-2. constructor
-
-# 方法
-
-1. assign()
-2. create()
-3. defineProperties()
-4. defineProperty()
-5. entries()
-6. fromEntries()
-6. keys()
-7. values()
-8. hasOwnProperty()
-10. isPrototyeOf()
-11.
-8. getOwnPropertyDescriptor()
-9. getOwnPropertyDescriptors()
-10. getPrototypeOf()
-11. getOwnPropertyNames()
-12. getOwnPropertySymbols() 获取对象上所有Symbol类型的键
-13. is()
-14. isExtensible()
-15. isFrozen()
-16. isSealed()
-17. preventExtensions()
-18.
-
 Reflect.ownKeys(obj) 获取对象上所有的键
 
 创建对象的方法
@@ -118,3 +88,4 @@ Object.isFrozen(obj)
 2. 访问器属性 它们本质上是获取和设置值的函数，但从外部代码来看像常规属性。
 
 Object.assign(target, orgin) //仅复制可枚举的属性(包括符号属性),原型上的属性不复制，只读属性会作为普通属性进行复制。
+

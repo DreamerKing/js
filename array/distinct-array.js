@@ -17,7 +17,7 @@ function distinct(oringin) {
     //   temp.push(item);
     // }
 
-    // 调用includes() 或indexOf() 函数 
+    // 调用includes() 或indexOf() 函数
     // if(!temp.includes(item)){
     //   temp.push(item);
     // }
@@ -120,9 +120,4 @@ console.log(arr2);
 console.log(merge2(arr, arr2));
 console.log(arr);
 console.log(arr2);
-
-
-
-
-
 

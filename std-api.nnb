@@ -1,0 +1,120 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# std api"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## URL\n- href\n- search\n- hash\n\nSearchParams\n- append()\n- set()\n- get()\n- getAll()\n- has()\n- delete()\n- sort()\n- entries()"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let url = new URL('https://github.com/search?q=react&type=repositories#app')\nconsole.log(url);\n// 相对url在前，绝对url(不包含路径之后的内容)在后\nlet url2 = new URL(\"search?q=react&type=repositories#app2\", 'https://github.com')\nconsole.log(url2);\n\nlet url3 = new URL(\"ftp://admin:1337!@ftp.zp.com/user?id=2\")\nconsole.log(url3);\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "自动添加标点符号及转义特殊字符"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let url = new URL(\"http://google.com\")\nurl.protocol = \"https\"\nurl.pathname = '/api/search v3'\nurl.search = \"id=2&name=最美的人\"\nurl.hash = 'app'\nconsole.log(url.toString());\nconsole.log(url);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "重新赋值href重新解析url\nsearch属性引用url中整个查询部分，从问号开头到第一个井字符或url结束。可以有多个相同的名字表示该参数有多值。\nsearchParams是一个对URLSearchParams对象的只读引用，具有获取、设置、添加、删除和排序参数\n可以创建URLSearchParams对象编码好查询参数转换成字符串赋值给search属性。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let url = new URL(\"http://baidu.com\")\nurl.href = \"http://jd.com/search?q=k n&n=b&n=b#l1\"\nconsole.log(url);\nlet sq = url.searchParams;\nsq.append('q', 12)\nsq.set('a', 'name')\nsq.sort();\nconsole.log(sq.get('n'));\nconsole.log(sq.getAll('n'));\nconsole.log(url.search);\nsq.delete('a')\nconsole.log(sq.has('q'));\nconsole.log(url.href);\nconsole.log([...sq.entries()]);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "遗留API\n- escape()/unescape() 转义/反转义URL\n- encodeURI()/decodeURI() 转义非ASCII字符和某些ASCII字符(如空格) 需要转义的字符首先会被转换为它们的UTF-8编码，然后再将该编码的每个字节替换成%xx转义序列，其中xx为两个十六进制数字。对整个字符串编解码，不会转义URL分隔符(如/、?和#),不能正确处理其组件中包含这些字符的URL。\n- encodeURIComponent()/decodeURIComponent() 专门转义URL的单个组件，会对URL分隔符/、?和#进行转义。它会将查询参数中的空格转义成%20,实际上查询参数的空格应该被转义为+。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let es = encodeURI(\"你好/#app\")\nconsole.log(es);\nlet ds = decodeURI(\"/app/?id=2&name=%E6%9C%80%E7%BE%8E%E7%9A%84%E4%BA%BA\")\nconsole.log(ds);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a = encodeURIComponent(\"hell /cc?ab你好\")\nconsole.log(a);\nconsole.log(decodeURIComponent(a));"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function next() {\n  console.log('next');\n  setTimeout(() => {\n    next();\n  }, 1000)\n}\n\nlet i = 1;\nconst inter = setInterval(() => {\n  console.log(\"call\", i++);\n}, 2000)\n\nvoid setTimeout(() => {\n  clearInterval(inter)\n}, 6000)\n// next()"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "call 1",
+                                "call 2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 正则表达式\n描述文本模式的对象。String和RegExp都定义了使用正则表达式对文本执行强大模式匹配和搜索替换的功能的方法。\n\n创建方式：\n- 字面量形式 /pattern/flags\n- 构造函数RegExp(patten, flags)\n- 标志字符控制匹配方式\n\n字面量字符 所有字母和数字在正则表达中都匹配自身的字面量值\n常规字符\n反斜杠开头的转义序列\n\\0(\\u0000) Null、\\t(\\u0009)、\\n(\\u000A)、\\v(\\u000B)、\\f(\\u000C) 、\\r(\\u000D)\n\\xnn 十六进制数值指定的拉丁字符\n\\uxxxx  十六进制数值指定的Unicode字符\n\\u{n} 码点n指定的Unicode字符, n是介于0～10FFFF之间的1到6个十六进制数值\n\\cX 控制字符^X\n\n特殊字符: ^ $ . * ? = ! : | \\ / ( ) [ ] { }\n有的只有在特定的上下文中具有特殊含义。在其他上下文仍然按字面量对待。\n很多数字和字母前加了反斜杠也具有特殊含义。任何想匹配字面量值的字母和数字都不应该加反斜杠。\n正则表达式中要表达反斜杠字面量值，必须使用另一个反斜杠来转义它。在RegExp函数函数中的任何反斜杠都要写两次，因为在字符串中也使用反斜杠作为转义字符。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const pattern = /[\\u0009-\\u000D]/\nlet result = pattern.test('\\f')\nconsole.log(result);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "true",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

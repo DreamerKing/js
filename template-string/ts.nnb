@@ -3,19 +3,19 @@
         {
             "language": "markdown",
             "source": [
-                "# 模版字符串\n\n不带标签的模版字符串  \n带标签的模版字符串 标签函数"
+                "# 模版字符串"
             ],
             "outputs": []
         },
         {
             "language": "markdown",
             "source": [
-                "+ 可以包含未转义字符\n+ 占位符中的表达式前后空格、换行、缩进不会包含在字符串中\n+ 标准转义序列与字符串字面量相同"
+                "## 不带标签的模版字符面量\n+ 表达式的返回值填充占位符，不是字符串的转换为字符串。\n+ 实际需要表示${才需要对$进行转义\n+ 可以包含未转义换行符，换行符之后的行中，任何前置空格都会包含在字符串中\n+ 占位符中的表达式前后空格、换行、缩进不会包含在字符串中\n+ 标准转义序列与字符串字面量相同"
             ],
             "outputs": []
         },
         {
-            "language": "typescript",
+            "language": "javascript",
             "source": [
                 "const c = \"cc1\";\nconst str = `a${c}a\\nb`;\nconsole.log(str);\n"
             ],
@@ -37,7 +37,7 @@
         {
             "language": "javascript",
             "source": [
-                "function example(p1, ...p) {\n  console.log(p1, p);\n}\nconst b = \"b\", c = 12, d = () => \"hello\";\nexample`a ${b} | ${c} * ${b + c} | ${d}`;\n"
+                "let s = `\\${a}  $ {b} {c}`\nconsole.log(s);"
             ],
             "outputs": [
                 {
@@ -45,7 +45,7 @@
                         {
                             "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "[ 'a ', ' | ', ' * ', ' | ', '' ] [ 'b', 12, 'b12', [Function: d] ]",
+                                "${a}  $ {b} {c}",
                                 ""
                             ]
                         }
@@ -56,7 +56,7 @@
         {
             "language": "javascript",
             "source": [
-                "const loadJson = (template, ...values) => {\n  let result = template[0];\n  for (let idx = 1; idx < template.length; idx++) {\n    result += JSON.stringify(values[idx - 1]) + template[idx];\n  }\n  return result;\n};\n\nconst loadJson2 = (template, ...values) => {\n  return template.reduce((pre, cur, i) =>\n    `${pre} ${JSON.stringify(values[i - 1])} ${cur}`\n  );\n};\n\nconst a = [1, 2, 3];\nconst b = { name: \"King\", age: 23 };\nconst c = \"Hello\";\n\nconst result = loadJson`a = ${a}\\t b = ${b} \\t c = ${c} |`;\nconsole.log(result);\n\nconsole.log(loadJson2`a = ${a}\\t b = ${b} \\t c = ${c} |`);\n"
+                "let s = `\\\na\n  b\n\n\n`\nconsole.log(s);"
             ],
             "outputs": [
                 {
@@ -64,8 +64,188 @@
                         {
                             "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "a = [1,2,3]\t b = {\"name\":\"King\",\"age\":23} \t c = \"Hello\" |",
-                                "a =  [1,2,3] \t b =  {\"name\":\"King\",\"age\":23}  \t c =  \"Hello\"  |",
+                                "a",
+                                "  b",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "for (const n of [1, 2, 3]) {\n  console.log(`\\\nLine ${n}-1\n  Line ${n}-2\n`);\n}"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Line 1-1",
+                                "  Line 1-2",
+                                "",
+                                "Line 2-1",
+                                "  Line 2-2",
+                                "",
+                                "Line 3-1",
+                                "  Line 3-2",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const a = [\"one\", \"two\", \"three\"]\nconsole.log(`Complex: ${a.reverse()\n  .join()\n  .toLocaleUpperCase()\n  }`);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Complex: THREE,TWO,ONE",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let a = [\"text\", \"from\", \"user\"];\nlet lbl = \"Label from user\";\nconsole.log(`<div>${encodeURIComponent(`${lbl}: ${a.join()}`)}</div>`);\n\nconst userText = encodeURIComponent(`${lbl}: ${a.join()}`)\nconsole.log(`<div>${userText}}</div>`);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "<div>Label%20from%20user%3A%20text%2Cfrom%2Cuser</div>",
+                                "<div>Label%20from%20user%3A%20text%2Cfrom%2Cuser}</div>",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let s = `\\\\n a \\n b\\u2122`\nconsole.log(s);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "\\n a ",
+                                " b™",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "  ## 带标签的模版字符串 标签函数"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "占位符求值之后不会转换为表达式\n返回值也可以不是字符串\n可以用于创建DSL"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function example(template, ...values) {\n  console.log(template);\n  console.log(values);\n}\nconst b = \"b\", c = 12, d = () => \"hello\";\nexample`a ${b} | ${c} * ${b + c} | ${d}`;\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[ 'a ', ' | ', ' * ', ' | ', '' ]",
+                                "[ 'b', 12, 'b12', [Function: d] ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const loadJson = (template, ...values) => {\n  let result = template[0];\n  for (let idx = 1; idx < template.length; idx++) {\n    result += JSON.stringify(values[idx - 1]) + template[idx];\n  }\n  return result;\n};\n\nconst a = [1, 2, 3];\nconst b = { name: \"King\", age: 23 };\nconst c = \"Hello\";\n\nconst result = loadJson`a = ${a}\\t b = ${b} \\t c = ${c}`;\nconsole.log(result);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "a = [1,2,3]\t b = {\"name\":\"King\",\"age\":23} \t c = \"Hello\"",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const loadJson = (template, ...values) => {\n  return template.reduce((pre, cur, i) =>\n    `${pre} ${JSON.stringify(values[i - 1])} ${cur}`\n  );\n};\n\nconst a = [1, 2, 3];\nconst b = { name: \"King\", age: 23 };\nconst c = \"Hello\";\nconst result = loadJson`a = ${a}\\t b = ${b} \\t c = ${c} `\nconsole.log(result);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "a =  [1,2,3] \t b =  {\"name\":\"King\",\"age\":23}  \t c =  \"Hello\"  ",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function emulateUntagged(template, ...values) {\n  return template.reduce((acc, str, index) => acc + values[index - 1] + str)\n}\n\nconst a = 1, b = 2, c = 3;\nconst str = emulateUntagged`Test: ${a} ${b} ${c}`\nconsole.log(str);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Test: 1 2 3.",
                                 ""
                             ]
                         }
@@ -87,6 +267,185 @@
                                 "\\u000A\\x0a\\n",
                                 "12",
                                 "\\",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const show = (template) => {\n  console.log(\"template:\", template);\n  console.log(\"template.raw:\", template.raw);\n}\n\nshow`Has invalid escape: \\ufoo${\",\"}Has only valid escapes: \\n`"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "template: [ undefined, 'Has only valid escapes: \\n' ]",
+                                "template.raw: [ 'Has invalid escape: \\\\ufoo', 'Has only valid escapes: \\\\n' ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const createRegex = (template, ...values) => {\n  // const source = template.raw.reduce((acc, str, index) => acc + values[index - 1] + str);\n  const source = String.raw(template, ...values)\n\n  const match = /^\\/(.+)\\/([a-z*])$/.exec(source);\n  if (!match) {\n    throw new Error(\"Invalid regular expression\");\n  }\n  const [, expr, flags = \"\"] = match;\n  return new RegExp(expr, flags);\n}\n\nconst escapeEegExp = (s) => String(s).replace(/[\\\\^$*+?.()|[\\]{}]/g, \"\\\\$&\");\n\nconst alternatives = [\"this\", \"that\", \"the other\"]\nconst reg = createRegex`/\\b(?:${alternatives.map(escapeEegExp).join(\"|\")})\\b/i`\nconsole.log(reg);\n\nconst test = (str, expect) => {\n  const result = reg.test(str);\n  console.log(str + \":\", result, \"=>\", !result == !expect ? \"Good\" : \"Error\");\n}\n\ntest(\"does't have either\", false)\ntest(\"has_this_but_not_delimited\", false)\ntest(\"has this\", true)\ntest(\"has the other\", true)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "/\\b(?:this|that|the other)\\b/i",
+                                "does't have either: false => Good",
+                                "has_this_but_not_delimited: false => Good",
+                                "has this: true => Good",
+                                "has the other: true => Good",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## String.raw\n返回模版的原始文本段和所有占位符表达式的返回值 输出原始字符串\n创建无需解码字符中转义序列的字符串很有用，如window路径硬编码、LaTeX或PDF序列、包含反斜杠和可变部分的正则表达式。\n在标签函数中，使用String.raw将模版和值拼接到字符串中"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const answer = 42\nconsole.log(String.raw`Answer:\\t${answer}`);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Answer:\\t42",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let path = String.raw`C:\\nifty\\stuff.json`\nconsole.log(path);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "C:\\nifty\\stuff.json",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const separator = \":\"\nlet r = new RegExp(String.raw`^\\d+${separator}\\d+$`)\nconsole.log(r);\nr.test(\"2:3\")"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "/^\\d+:\\d+$/",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33mtrue\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 模版字面量复用\n将模版封装到一个函数中调用"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const formateUser = (firstName, lastName, handler) => `${firstName} ${lastName} (${handler})`;\nconsole.log(formateUser(\"Joe\", \"Bloggs\", \"@joebloggs\"));"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Joe Bloggs (@joebloggs)",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "⚠️ 依赖自动插入分号(ASI)时,当`(`、`[`和```位于行首时，应在其前面加上分号，避免意外的函数调用、属性访问和标签函数调用。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "JS的字符串允许无效的代理对(没有前置或后置代理)的UTF-16代码单元\n如果遇到只有一半的代理对，则必须将它视为一个码点而不是代码单元。\n码点 具有特定含义和属性的值 通常以U+开头后跟4～6个十六进制数字\n码点范围: 0x000000-0x10FFFF\n码点不是“字符” 码点可是一个单独的“字符”，也可以是一个“基础字符”,或一个“组合字符”或其他东西。也有一些不表示字位的码点，如零宽的空格,以及一些不是单词组成部分的符号(如表情符号) \n字位 最小的有意义书写符号单位。计算一个文字系统的规模时，是以字位这个最小单位来计算的，而不是以字位变体。\n\nUnicode最初使用范围0x0000~0xffff,占16位两个字节的通用字符集(UCS-2)。\n代理对 Unicode扩展到16位以外(0x00000~0x10ffff需要21位)时，为了支持16位系统，将21位码点转换到16位码点(UTF-16) 0xD800~0xDBFF范围内的值是前置(高位)代理，后面0xDC00~0xDFFF范围内的值是后置代理(低位代理) 这对代码组合在一起，可通过相当简单的计算转换成单个代码点。\n\nUTF-8 码点编制成1～4个8位的代码单元 前128个UTF-8字符与前128个ASCII字符精确匹配，所有其他字符都使用2到4个字节。每个字节都有一些用于编码目的的保留位。由于非ASCII字符需要一个以上的字节来存储。\nUTF-32 用32位代码单元进行码点到代码单元的一对一映射。\n当用UTF-8表示字符时，每个字符都由一个或多个字节的序列来表示,使用的字节数取决于该字符所代表的码位。\n- 在 ASCII 范围内（0-127）的代码由一个字节表示\n-（128-2047）范围内的码位由两个字节表示\n-（2048-65535）范围内的代码点由三个字节表示\n-（65536-1114111）范围内的代码由四个字节表示。\nUT8编码规则:\n1. 对于单字节的符号，字节的第一位设为0，后面7位为这个符号的 Unicode 码。因此对于英语字母，UTF-8 编码和 ASCII 码是相同的。\n2. 对于n字节的符号（n > 1），第一个字节的前n位都设为1，第n + 1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的 Unicode 码。\n<pre>\nUnicode符号范围      |        UTF-8编码方式\n(十六进制)           |            （二进制）\n--------------------+---------------------------------------------\n0000 0000-0000 007F | 0xxxxxxx\n0000 0080-0000 07FF | 110xxxxx 10xxxxxx\n0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx\n0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx\n</pre>\n\nUTF-8 序列的第一个字节被称为 “leader byte”。leader byte 提供了关于序列中有多少个字节的信息，以及字符的码位值是什么。\n单字节序列的 leader byte 总是在（0-127）范围内。两字节序列的 leader byte 在（194-223）范围内。三字节序列的 leader byte 在（224-239）范围内。四字节序列的 leader byte 在（240-247）范围内。\n序列中剩余的字节被称为 “trailing bytes”。两字节序列的 trailing bytes 的范围是（128-191）。三字节序列的 trailing bytes 的范围是（128-191）。而四字节序列的 trailing bytes 在（128-191）范围内。\n以通过查看 leader bytes 和 trailing bytes 来计算一个字符的码位值。对于一个单字节的序列，其码位值等于 leader bytes 的值。\n对于一个两字节的序列，码位值等于 ((leader byte - 194) * 64) + (trailing byte - 128)。\n对于一个三字节的序列，码位值等于 ((leader byte - 224) * 4096) + ((trailing byte1 - 128) * 64) + (trailing byte2 - 128)。\n对于一个四字节的序列，码位值等于 ((leader byte - 240) * 262144) + ((trailing byte1 - 128) * 4096) + ((trailing byte2 - 128) * 64) + (trailing byte3 - 128)。\n\nASCII使用7位代码来表示128个不同的字符。这些代码被分为95个可打印的字符，其中包括26个英文字母（包括大写和小写）、10个数字，以及各种标点符号和其他符号。还有33个不可打印的字符，其中包括控制字符，如回车和换行，以及其他各种用于格式化文本的字符。\n\nUnicode 只是一个符号集，它只规定了符号的二进制代码，却没有规定这个二进制代码应该如何存储。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let s = \"\\u{D820}\"\nlet s1 = \"\\u{0061}\"\nlet s2 = \"\\u{0928}\\u{093f}\"\nlet s3 = \"\\u{1F60A}\"\nconsole.log(s, s.length)\nconsole.log(s1, s1.length);\nconsole.log(s2, s2.length);\nconsole.log(s3, s3.length);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "� 1",
+                                "a 1",
+                                "नि 2",
+                                "😊 2",
                                 ""
                             ]
                         }

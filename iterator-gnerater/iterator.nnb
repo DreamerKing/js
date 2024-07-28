@@ -1,0 +1,111 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 迭代器与生成器\n\n迭代器是一种结构化模式，是一种有序的、连续的、基于拉取的用于消耗数据的组织方式。\n\n可迭代对象有字符串、数组、Map、Set、定型数组等。可迭代对象可以使用for/of循环来遍历或使用`...`操作符来展开或扩展,也可用于解构赋值。有些接收数组对象的内置函数或构造函数可以接收任意迭代器。\n\n可迭代对象 任何具有专用迭代器方法Symbol.iterator,且该方法返回迭代对象的对象。\n迭代器对象 任何具有next()方法，且该方法返回迭代结果对象的对象。\n迭代结果对象 具有value和done属性的对象。\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "class Range {\n  constructor(from, to) {\n    this.from = from;\n    this.to = to;\n  }\n  has(x) {\n    return typeof x == 'number' && x >= this.from && x <= this.to\n  }\n  toString() {\n    return `{x | ${this.from} <= x <= ${this.to}}`\n  }\n\n  [Symbol.iterator]() {\n    let current = this.from;\n    let last = this.to;\n\n    return {\n      next() {\n        return current <= last ?\n          {\n            done: false,\n            value: current++\n          } : {\n            done: true\n          }\n      },\n\n      [Symbol.iterator]() {\n        return this\n      }\n    }\n  }\n}\n\nfunction map(iterable, f) {\n  let iterator = iterable[Symbol.iterator]();\n  return {\n    [Symbol.iterator]() { return this },\n    next() {\n      let v = iterator.next();\n      return v.done ? v : { value: f(v.value) }\n    }\n  }\n}\n\nfunction filter(iterable, f) {\n  const iterator = iterable[Symbol.iterator]();\n  return {\n    [Symbol.iterator]() { return this },\n    next() {\n      while (true) {\n        let v = iterator.next();\n        if (v.done || f(v.value)) return v;\n      }\n    }\n  }\n}\n\nlet r = new Range(2, 10);\nfor (const c of r) {\n  console.log(c);\n}\n\nlet result = filter(r, (x) => x > 5)\nconsole.log([...result]);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "9",
+                                "10",
+                                "[ 6, 7, 8, 9, 10 ]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function* gen() {\n  let a = yield 1;\n  console.log('test', a)\n  return 2;\n}\n\nconst it = gen();\nconsole.log(it.next('🤔')); // 1\nconsole.log(it.next('2')); // test 2  2\n\nconst it2 = gen();\nfor (const it of it2) {\n  console.log(it);\n}"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ value: 1, done: false }",
+                                "test 2",
+                                "{ value: 2, done: true }",
+                                "1",
+                                "test undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function *foo(x, y){\n  yield x + (yield y);\n  console.log(x*y);\n  return x - y;\n}\n\nlet a = foo(23, 21);\nconsole.log(a);\n\nconsole.log(a.next());\nconsole.log(a.next());\nconsole.log(a.next());\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Object [Generator] {}",
+                                "{ value: 21, done: false }",
+                                "{ value: NaN, done: false }",
+                                "483",
+                                "{ value: 2, done: true }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "function* foo() {\n  try {\n    yield \"B\";\n  } catch (error) {\n    console.log(\"error caught inside *foo(): \", error);\n  }\n  yield \"C\";\n  throw \"D\";\n}\n\nfunction* baz() {\n  throw \"F\";\n}\n\nfunction* bar() {\n  yield \"A\";\n  try {\n    yield* foo();\n  } catch (error) {\n    console.log(\"error caught inside *bar(): \", error);\n  }\n  yield \"E\";\n  yield* baz();\n  yield \"G\";\n}\n\nlet it = bar();\nconsole.log(\"outside0: \", it.next().value);\nconsole.log(\"outside1: \", it.next(1).value);\nconsole.log(\"outside2: \", it.throw(2).value);\nconsole.log(\"outside3: \", it.next(3).value);\n\ntry {\n  console.log(\"outside4: \", it.next(4).value);\n} catch (error) {\n  console.log(\"error caught outside4\", error);\n}\n\nconsole.log(\"outside5: \", it.next(5).value);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "outside0:  A",
+                                "outside1:  B",
+                                "error caught inside *foo():  2",
+                                "outside2:  C",
+                                "error caught inside *bar():  D",
+                                "outside3:  E",
+                                "error caught outside4 F",
+                                "outside5:  undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

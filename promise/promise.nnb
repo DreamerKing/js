@@ -1,0 +1,130 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# Promise\n- all() 所有promise履约时返回履约的结果，一定存在任何一个promise拒绝，就返回首先拒绝的promise结果\n- allSettled() 返回所有promise最终的结果，无论成功或拒绝\n- any() 任何一个promise履约就返回履约的promise结果，只有所有promise拒绝，才返回拒绝的结果\n- race() 返回最先确定状态的promise的结果"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const API_BASE = 'https://my-json-server.typicode.com/FlyingWithYou/mock'\n\nfunction handleError(response) {\n  return new Error(`Unexpected status code: ${response.status} ${response.statusText} for ${response.url}`);\n}\n\nfunction handleResponses(responses) {\n  return Promise.all(responses.map(response => {\n    if (response.ok) {\n      return response.json()\n    } else {\n      return Promise.reject(handleError(response))\n    }\n  }))\n}\n\nfunction fetchData(resources) {\n  return Promise.all(resources.map(resource => fetch(`${API_BASE}/${resource}`)));\n}\n\nfetchData(['posts', 'comments'])\n  .then(handleResponses)\n  .then(([posts, comments]) => {\n    console.log(posts);\n    console.log(comments);\n  })\n  .catch(reason => {\n    console.error(reason)\n  });"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[",
+                                "  { id: '1', title: 'a title', views: 100 },",
+                                "  { id: '2', title: 'another title', views: 200 }",
+                                "]",
+                                "[",
+                                "  { id: '1', text: 'a comment about post 1', postId: '1' },",
+                                "  { id: '2', text: 'another comment about post 1', postId: '1' }",
+                                "]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const API_BASE = 'https://my-json-server.typicode.com/FlyingWithYou/mock'\n\nfunction handleError(response) {\n  return new Error(`Unexpected status code: ${response.status} ${response.statusText} for ${response.url}`);\n}\n\nfunction handleResponses(responses) {\n  return Promise.allSettled(responses.map(response => {\n    if (response.status == 'fulfilled') {\n      if (response.value.ok) {\n        return response.value.json()\n      } else {\n        return Promise.reject(handleError(response.value))\n      }\n    } else {\n      return Promise.reject(response.reason)\n    }\n  }))\n}\n\nfunction fetchData(resources) {\n  return Promise.allSettled(resources.map(resource => fetch(`${API_BASE}/${resource}`)));\n}\n\nfetchData(['posts', 'comments', 'notes'])\n  .then(handleResponses)\n  .then(([posts, comments, notes]) => {\n    console.log(posts.value);\n    console.log(comments.value);\n    console.log(notes.reason);\n  })\n  .catch(reason => {\n    console.error(reason)\n  });"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[",
+                                "  { id: '1', title: 'a title', views: 100 },",
+                                "  { id: '2', title: 'another title', views: 200 }",
+                                "]",
+                                "[",
+                                "  { id: '1', text: 'a comment about post 1', postId: '1' },",
+                                "  { id: '2', text: 'another comment about post 1', postId: '1' }",
+                                "]",
+                                "TypeError: fetch failed",
+                                "    at node:internal/deps/undici/undici:12500:13",
+                                "    at processTicksAndRejections (node:internal/process/task_queues:95:5)",
+                                "    at async Promise.allSettled (index 2)",
+                                "    at async C (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113337)",
+                                "    at async t.execCode (/Users/dreamerking/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114306) {",
+                                "  [cause]: Error: Client network socket disconnected before secure TLS connection was established",
+                                "      at TLSSocket.onConnectEnd (node:_tls_wrap:1727:19)",
+                                "      at TLSSocket.emit (node:events:531:35)",
+                                "      at TLSSocket.emit (node:domain:488:12)",
+                                "      at endReadableNT (node:internal/streams/readable:1696:12)",
+                                "      at processTicksAndRejections (node:internal/process/task_queues:82:21) {",
+                                "    code: 'ECONNRESET',",
+                                "    path: undefined,",
+                                "    host: 'my-json-server.typicode.com',",
+                                "    port: 443,",
+                                "    localAddress: null",
+                                "  }",
+                                "}",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 异步函数/方法\n\n与同步函数的区别\n- 总是返回Promise\n- 抛出错误或未捕获出现异常时返回拒绝态的Promise\n- 可以使用await\n- 可以使用for-await循环"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const p1 = Promise.resolve(2);\n\nasync function getNumber() {\n  return p1\n}\n\nconst result = getNumber();\nconsole.log(result == p1);\nconsole.log(await result);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "false",
+                                "2",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 顶层 await\n\n只能在模块中使用"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 追踪未处理拒绝的情况\n运行环境负责\n\n只要有then()方法(包括catch()和finally())调用,无论是否附加履约或拒绝处理器都认为得到了处理。\n\nglobalThis对象上的两个事件\n- unhandledrejection 被拒promise在事件循环一个回合没有拒绝处理时触发\n- rejectionhandled 被拒promise在事件循环一个回合有拒绝处理时触发\n\n事件对象\n- type \n- promise\n- reason\n\n在unhandledrejection事件处理器上调用preventDefault()可以避免将未处理异常默认输出到控制台，但不影响与rejectionhandled事件的关系。\n\n在unhandledrejection事件处理器中添加拒绝处理器可以避免rejectionhandled事件。\n"
+            ],
+            "outputs": []
+        }
+    ]
+}

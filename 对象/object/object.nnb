@@ -1,0 +1,77 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "const inventory = [\n  { name: \"芦笋\", type: \"蔬菜\", quantity: 5 },\n  { name: \"香蕉\", type: \"水果\", quantity: 0 },\n  { name: \"山羊\", type: \"肉\", quantity: 23 },\n  { name: \"樱桃\", type: \"水果\", quantity: 5 },\n  { name: \"鱼\", type: \"肉\", quantity: 22 },\n];\n\nconst grouped = Object.groupBy(inventory, ({ type }) => type);\nconsole.log(grouped);\n\n const grouped2 = Object.groupBy(inventory, ({ quantity }) => quantity > 5 ? \"restock\": \"ok\");\nconsole.log(grouped2);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[Object: null prototype] {",
+                                "  '蔬菜': [ { name: '芦笋', type: '蔬菜', quantity: 5 } ],",
+                                "  '水果': [",
+                                "    { name: '香蕉', type: '水果', quantity: 0 },",
+                                "    { name: '樱桃', type: '水果', quantity: 5 }",
+                                "  ],",
+                                "  '肉': [",
+                                "    { name: '山羊', type: '肉', quantity: 23 },",
+                                "    { name: '鱼', type: '肉', quantity: 22 }",
+                                "  ]",
+                                "}",
+                                "[Object: null prototype] {",
+                                "  ok: [",
+                                "    { name: '芦笋', type: '蔬菜', quantity: 5 },",
+                                "    { name: '香蕉', type: '水果', quantity: 0 },",
+                                "    { name: '樱桃', type: '水果', quantity: 5 }",
+                                "  ],",
+                                "  restock: [",
+                                "    { name: '山羊', type: '肉', quantity: 23 },",
+                                "    { name: '鱼', type: '肉', quantity: 22 }",
+                                "  ]",
+                                "}",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## instanceof \n不适用于原始类型，对于原始类型都返回false。\n通过确定对象的原型是否在另外一个上原型链上从而确定对象的类型。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## typeof \n对null和引用类型值要注意"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "console.log(12 instanceof Number);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "false",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
